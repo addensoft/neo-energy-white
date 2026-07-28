@@ -1,0 +1,262 @@
+@import "tailwindcss";
+
+/**
+ * Design tokens — Creative Direction §6 (Typography), §7 (Color), §12 (Layout).
+ *
+ * Two layers, deliberately kept separate:
+ *  1. Raw brand palette (--palette-*)  — the literal values from the approved doc.
+ *  2. Semantic aliases (--background, --foreground, --muted, --border, ...)
+ *     — what components actually consume, so a future palette adjustment (e.g.
+ *     confirming exact Ion Blue stops against the vector logo, per CD §15) means
+ *     editing values in one place, not hunting through every component.
+ *
+ * Light is the site's theme (superseding the earlier dark-only direction, per
+ * direct instruction) — every section reads dark ink on a white/near-white
+ * base, with Ion Blue kept as the one constant accent across both. Hero's own
+ * video-driven overlay is a self-contained cinematic element, not page chrome,
+ * and is intentionally left untouched here — see `sections/hero`.
+ */
+:root {
+  color-scheme: light;
+
+  /* 1. Raw brand palette */
+  --palette-void: #ffffff;
+  --palette-ink: #0a0e14;
+  --palette-navy: #1c4669;
+  --palette-graphite: #f1f2f5;
+  --palette-graphite-light: #e8eaed;
+  --palette-ion: #2e8fff;
+  --palette-ion-light: #5ac8ff;
+  --palette-white: #ffffff;
+  --palette-aluminium: #b8bec7;
+  --palette-slate: #5b6472;
+  --palette-copper: #b9713d;
+  --palette-certified: #3ecf8e;
+
+  /* 2. Semantic aliases */
+  --background: var(--palette-void);
+  --foreground: var(--palette-ink);
+  --muted: var(--palette-slate);
+  --border: color-mix(in srgb, var(--palette-ink) 10%, transparent);
+  --graphite: var(--palette-graphite);
+  --graphite-light: var(--palette-graphite-light);
+  --navy: var(--palette-navy);
+  --ion: var(--palette-ion);
+  --ion-light: var(--palette-ion-light);
+  --copper: var(--palette-copper);
+  --certified: var(--palette-certified);
+}
+
+@theme inline {
+  /* Typography — §6. Raw font variables are set on <html> in layout.tsx (see lib/fonts.ts). */
+  --font-display: var(--font-geist-display);
+  --font-mono: var(--font-geist-mono);
+  --font-body: var(--font-inter-body);
+
+  /* Color — §7 */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-graphite: var(--graphite);
+  --color-graphite-light: var(--graphite-light);
+  --color-navy: var(--navy);
+  --color-void: var(--palette-void);
+  --color-ion: var(--ion);
+  --color-ion-light: var(--ion-light);
+  --color-white: var(--palette-white);
+  --color-aluminium: var(--palette-aluminium);
+  --color-copper: var(--copper);
+  --color-certified: var(--certified);
+
+  /* Spacing — §12: 24px mobile / 96px desktop container gutters, 8-region section rhythm */
+  --spacing-gutter: 1.5rem;
+  --spacing-gutter-lg: 6rem;
+  --spacing-section: 8rem;
+  --spacing-section-sm: 4rem;
+
+  /* Radius — restrained/"engineered" precision rather than soft, bubbly corners */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+
+  /* Shadows — dark-UI elevation plus the one reusable accent glow */
+  --shadow-elevation-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-elevation-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-elevation-lg: 0 24px 64px rgba(0, 0, 0, 0.6);
+  --shadow-ion-glow: 0 0 28px rgba(46, 143, 255, 0.26);
+
+  /* Easing — §4. Duration tokens live in lib/motion-tokens.ts for GSAP/Framer consumption. */
+  --ease-engineered: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Breakpoints — extends the default scale for ultrawide displays (§12). */
+  --breakpoint-3xl: 120rem;
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+/**
+ * Global typography system — one scale, applied everywhere. Mobile-first
+ * values below, overridden at `md` (tablet, 768px) and `lg` (desktop,
+ * 1024px) to match Tailwind's own breakpoints so these compose predictably
+ * with responsive utility classes passed in via `className`.
+ *
+ * `@layer components` (not `utilities`) on purpose: Tailwind's utilities
+ * layer always wins the cascade over components, so a per-instance utility
+ * class (e.g. `max-w-md`, `text-ion`) passed through a component's
+ * `className` prop correctly overrides these defaults without a specificity
+ * fight.
+ *
+ * Exception: Hero's headline/subline are frozen (approved, locked) and keep
+ * their own pre-existing sizing in `components/ui/heading.tsx`'s `hero`
+ * variant and `paragraph.tsx`'s `lead` variant — neither of those variants'
+ * values were touched here, specifically so Hero's rendered output doesn't
+ * shift. Every other section's heading/paragraph migrates to the classes
+ * below instead.
+ */
+@layer components {
+  /* H1 — reserved for a real future non-Hero H1; Hero itself keeps its own
+     frozen `hero` heading variant rather than this class. */
+  .text-h1 {
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+  }
+  @media (min-width: 768px) {
+    .text-h1 {
+      font-size: 4rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .text-h1 {
+      font-size: clamp(4.5rem, 8vw, 8rem);
+    }
+  }
+
+  /* H2 — major section titles. Every section headline on the page.
+     ~30% down from the original scale (2rem/2.8rem/clamp to 4.5rem) — still
+     one consistent size everywhere, just less dominant against the visuals. */
+  .text-h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-foreground);
+  }
+  @media (min-width: 768px) {
+    .text-h2 {
+      font-size: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .text-h2 {
+      font-size: clamp(2rem, 3.5vw, 3.15rem);
+    }
+  }
+
+  /* H3 — sub headings. */
+  .text-h3 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  @media (min-width: 768px) {
+    .text-h3 {
+      font-size: 1.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .text-h3 {
+      font-size: 1.75rem;
+    }
+  }
+
+  /* H4 — small card titles. */
+  .text-h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  @media (min-width: 768px) {
+    .text-h4 {
+      font-size: 1.15rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .text-h4 {
+      font-size: 1.25rem;
+    }
+  }
+
+  /* Body copy — every non-Hero paragraph. */
+  .text-body {
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.75;
+    letter-spacing: 0;
+    color: rgba(10, 14, 20, 0.72);
+    max-width: 600px;
+  }
+  @media (min-width: 768px) {
+    .text-body {
+      font-size: 0.95rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .text-body {
+      font-size: 1rem;
+    }
+  }
+
+  /* Specification labels — inline value+caption pairs, e.g. "77.94 kWh". */
+  .text-spec-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: rgba(10, 14, 20, 0.85);
+  }
+
+  /* Specification values — large standalone numbers, e.g. a stat bar.
+     ~20% down from the original scale (1.75rem/2.5rem) — gives dense
+     multi-column bars (Authority) room to breathe without wrapping. */
+  .text-spec-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-foreground);
+  }
+  @media (min-width: 1024px) {
+    .text-spec-value {
+      font-size: 2rem;
+    }
+  }
+
+  /* Small eyebrow/category labels, e.g. "Worldwide Authorized Agent". */
+  .text-label-sm {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.65;
+  }
+}
