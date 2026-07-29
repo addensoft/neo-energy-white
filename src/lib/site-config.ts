@@ -1,9 +1,6 @@
 /**
  * Single source of truth for site-wide identity, navigation, and SEO defaults.
  * Sourced from the approved Creative Direction document (§1 Brand Foundation, §12 Premium UI Layout).
- *
- * NOTE: `siteConfig.url` is a placeholder pending the client's production domain —
- * confirm before this value is used in canonical URLs / sitemap / robots at launch.
  */
 
 export const siteConfig = {
@@ -15,8 +12,11 @@ export const siteConfig = {
   // not the brand's core identity. Keep future copy framed accordingly.
   description:
     "Singapore's leading EV battery engineering and technology company — authorised partner across CATL, CALB, and BYD battery technologies.",
-  url: "https://www.neoenergy.sg",
-  // Placeholder pending the client's real inbox — same status as `url` above.
+  /** Client-confirmed production domain. Feeds `metadataBase`, the Open
+   * Graph URL, `sitemap.xml` and `robots.txt`. */
+  url: "https://neoenergybatt.com",
+  // Placeholder pending the client's real inbox — note this still sits on
+  // the older neoenergy.sg domain, not neoenergybatt.com; confirm before launch.
   contactEmail: "contact@neoenergy.sg",
   /** Client-confirmed WhatsApp line. `whatsappNumber` is digits-only for
    * wa.me deep links; `whatsappDisplay` is the human-readable form. */

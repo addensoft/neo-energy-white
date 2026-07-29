@@ -155,7 +155,7 @@ export function UnderConstructionView() {
               collision-proof at any aspect ratio. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none relative -mx-6 h-44 w-[calc(100%+3rem)] shrink-0 sm:h-56 lg:-mx-10 lg:h-[15rem] lg:w-[calc(100%+5rem)] xl:h-[17rem]"
+            className="pointer-events-none relative -mx-6 h-52 w-[calc(100%+3rem)] shrink-0 sm:h-64 lg:-mx-10 lg:h-[17rem] lg:w-[calc(100%+5rem)] xl:h-[19rem]"
           >
             <Image
               src="/images/construction-page-artwork.webp"
@@ -174,10 +174,27 @@ export function UnderConstructionView() {
                   "linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 35%, rgba(255,255,255,0.35) 70%, transparent 100%)",
               }}
             />
+            {/* …and the same in reverse at the foot, so the floor melts away
+                instead of stopping on a hard horizontal edge above the
+                closing copy. The copy then sits up inside this faded band
+                (see the negative top margin below), which reads as text
+                resting on the render's floor rather than on a flat white
+                slab bolted underneath it. */}
+            <div
+              className="absolute inset-x-0 bottom-0 h-3/5"
+              style={{
+                background:
+                  "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.92) 30%, rgba(255,255,255,0.6) 60%, transparent 100%)",
+              }}
+            />
           </div>
 
-          {/* Bottom: closing line + CTA, sitting over the artwork's floor */}
-          <div ref={setRevealRef(4)} className="relative z-10 flex flex-col items-center gap-4">
+          {/* Bottom: closing line + CTA, lifted into the render's faded
+              lower band so the two read as one continuous scene. */}
+          <div
+            ref={setRevealRef(4)}
+            className="relative z-10 -mt-10 flex flex-col items-center gap-4 lg:-mt-14"
+          >
             <p className="font-body text-foreground/80 max-w-md text-[0.95rem] leading-relaxed text-balance lg:text-base">
               We&apos;re working hard to bring you the best experience in EV battery
               solutions.
