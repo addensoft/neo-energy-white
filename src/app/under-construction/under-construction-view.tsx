@@ -81,11 +81,11 @@ export function UnderConstructionView() {
             lockup, headline and capability strip sit on clean white space
             and the render begins beneath them. Full-bleed put the battery
             directly behind the capability strip. */}
-        <div className="relative z-10 flex flex-1 flex-col items-center justify-between gap-8 px-6 py-10 text-center lg:gap-10 lg:px-10 lg:py-14">
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-between gap-5 px-6 py-6 text-center lg:gap-6 lg:px-10 lg:py-8">
           {/* Top: logo → headline → rule → intro → capability strip.
               `relative z-10` keeps it above the render, which becomes an
               absolutely-positioned sibling at `lg`. */}
-          <div className="relative z-10 flex w-full flex-col items-center gap-6 lg:gap-7">
+          <div className="relative z-10 flex w-full flex-col items-center gap-4 lg:gap-5">
             <div ref={setRevealRef(0)}>
               <Image
                 src="/images/footer-logo.webp"
@@ -93,27 +93,23 @@ export function UnderConstructionView() {
                 width={1597}
                 height={828}
                 priority
-                className="h-16 w-auto lg:h-20"
+                className="h-12 w-auto lg:h-14"
               />
             </div>
 
+            {/* ~32% down from the original scale, and the decorative rule
+                that sat under it is gone — both to buy vertical room so the
+                whole upper composition fits one screen on a laptop. */}
             <div ref={setRevealRef(1)} className="flex flex-col items-center">
-              <h1 className="font-display text-foreground text-[clamp(2.2rem,8.5vw,4.75rem)] leading-[1.04] font-bold tracking-[0.14em] uppercase">
+              <h1 className="font-display text-foreground text-[clamp(1.5rem,5.8vw,3.2rem)] leading-[1.04] font-bold tracking-[0.14em] uppercase">
                 Under
               </h1>
-              <span className="font-display text-ion text-[clamp(2.2rem,8.5vw,4.75rem)] leading-[1.04] font-bold tracking-[0.03em] uppercase">
+              <span className="font-display text-ion text-[clamp(1.5rem,5.8vw,3.2rem)] leading-[1.04] font-bold tracking-[0.03em] uppercase">
                 Construction
               </span>
             </div>
 
-            {/* Hairline rule with the brand's blue accent at its centre */}
-            <div ref={setRevealRef(2)} className="flex items-center gap-2">
-              <span className="via-foreground/25 h-px w-16 bg-gradient-to-r from-transparent to-transparent" />
-              <span className="bg-ion h-1 w-1 rotate-45" />
-              <span className="via-foreground/25 h-px w-16 bg-gradient-to-r from-transparent to-transparent" />
-            </div>
-
-            <div ref={setRevealRef(3)}>
+            <div ref={setRevealRef(2)}>
               <p className="font-body text-foreground/80 text-[0.95rem] leading-relaxed text-balance lg:text-lg">
                 We&apos;re building something exceptional.
                 <br />
@@ -124,8 +120,8 @@ export function UnderConstructionView() {
             {/* Capability strip — hairline dividers between items on the
                 wider layouts, a plain 2-up grid on small screens. */}
             <div
-              ref={setRevealRef(4)}
-              className="grid w-full max-w-2xl grid-cols-2 gap-y-7 sm:grid-cols-4 sm:gap-y-0"
+              ref={setRevealRef(3)}
+              className="grid w-full max-w-2xl grid-cols-2 gap-y-5 sm:grid-cols-4 sm:gap-y-0"
             >
               {FEATURES.map((feature, index) => (
                 <div
@@ -159,7 +155,7 @@ export function UnderConstructionView() {
               collision-proof at any aspect ratio. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none relative -mx-6 h-56 w-[calc(100%+3rem)] shrink-0 sm:h-72 lg:-mx-10 lg:h-[22rem] lg:w-[calc(100%+5rem)] xl:h-[26rem]"
+            className="pointer-events-none relative -mx-6 h-44 w-[calc(100%+3rem)] shrink-0 sm:h-56 lg:-mx-10 lg:h-[15rem] lg:w-[calc(100%+5rem)] xl:h-[17rem]"
           >
             <Image
               src="/images/construction-page-artwork.webp"
@@ -181,7 +177,7 @@ export function UnderConstructionView() {
           </div>
 
           {/* Bottom: closing line + CTA, sitting over the artwork's floor */}
-          <div ref={setRevealRef(5)} className="relative z-10 flex flex-col items-center gap-6">
+          <div ref={setRevealRef(4)} className="relative z-10 flex flex-col items-center gap-4">
             <p className="font-body text-foreground/80 max-w-md text-[0.95rem] leading-relaxed text-balance lg:text-base">
               We&apos;re working hard to bring you the best experience in EV battery
               solutions.
