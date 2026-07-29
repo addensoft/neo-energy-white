@@ -15,7 +15,7 @@ export function ScrollCue({ visible }: { visible: boolean }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: visible ? 1 : 0 }}
       transition={{ duration: DURATION.slow, ease: EASE_ENGINEERED }}
-      className="text-muted pointer-events-none absolute inset-x-0 bottom-8 z-10 flex justify-center"
+      className="text-foreground/70 pointer-events-none absolute inset-x-0 bottom-8 z-10 flex justify-center"
       aria-hidden="true"
     >
       <motion.div

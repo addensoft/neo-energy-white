@@ -10,30 +10,34 @@
  *     confirming exact Ion Blue stops against the vector logo, per CD §15) means
  *     editing values in one place, not hunting through every component.
  *
- * Dark is the only mode — Creative Direction §7: "Default mode is dark throughout
- * the cinematic chapters — this is non-negotiable... never the homepage." There is
- * no light-mode variant here on purpose.
+ * Light is the site's theme (superseding the earlier dark-only direction, per
+ * direct instruction) — every section reads dark ink on a white/near-white
+ * base, with Ion Blue kept as the one constant accent across both. Hero's own
+ * video-driven overlay is a self-contained cinematic element, not page chrome,
+ * and is intentionally left untouched here — see `sections/hero`.
  */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
   /* 1. Raw brand palette */
-  --palette-void: #05070a;
+  --palette-void: #ffffff;
+  --palette-ink: #0a0e14;
   --palette-navy: #1c4669;
-  --palette-graphite: #12161c;
-  --palette-graphite-light: #1a1f27;
+  --palette-graphite: #f1f2f5;
+  --palette-graphite-light: #e8eaed;
   --palette-ion: #2e8fff;
   --palette-ion-light: #5ac8ff;
   --palette-white: #ffffff;
   --palette-aluminium: #b8bec7;
+  --palette-slate: #5b6472;
   --palette-copper: #b9713d;
   --palette-certified: #3ecf8e;
 
   /* 2. Semantic aliases */
   --background: var(--palette-void);
-  --foreground: var(--palette-white);
-  --muted: var(--palette-aluminium);
-  --border: color-mix(in srgb, var(--palette-white) 12%, transparent);
+  --foreground: var(--palette-ink);
+  --muted: var(--palette-slate);
+  --border: color-mix(in srgb, var(--palette-ink) 10%, transparent);
   --graphite: var(--palette-graphite);
   --graphite-light: var(--palette-graphite-light);
   --navy: var(--palette-navy);
@@ -157,7 +161,7 @@
     font-weight: 600;
     line-height: 1.05;
     letter-spacing: -0.03em;
-    color: var(--color-white);
+    color: var(--color-foreground);
   }
   @media (min-width: 768px) {
     .text-h2 {
@@ -210,7 +214,7 @@
     font-weight: 400;
     line-height: 1.75;
     letter-spacing: 0;
-    color: rgba(255, 255, 255, 0.72);
+    color: rgba(10, 14, 20, 0.72);
     max-width: 600px;
   }
   @media (min-width: 768px) {
@@ -229,7 +233,7 @@
     font-size: 0.95rem;
     font-weight: 500;
     line-height: 1.5;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(10, 14, 20, 0.85);
   }
 
   /* Specification values — large standalone numbers, e.g. a stat bar.
@@ -239,7 +243,7 @@
     font-size: 1.4rem;
     font-weight: 700;
     line-height: 1;
-    color: var(--color-white);
+    color: var(--color-foreground);
   }
   @media (min-width: 1024px) {
     .text-spec-value {

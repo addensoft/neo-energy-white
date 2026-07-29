@@ -107,13 +107,15 @@ export function useCtaReveal({
             }),
           );
           idleTweens.push(
+            // A slower, calmer pulse — a light passing the horizon every so
+            // often, not a repeating sweep that draws the eye every few seconds.
             gsap.to(sweepRef.current, {
               xPercent: 130,
-              autoAlpha: 0.3,
-              duration: 2.6,
+              autoAlpha: 0.22,
+              duration: 3.4,
               ease: "power1.inOut",
               repeat: -1,
-              repeatDelay: 4,
+              repeatDelay: 8,
             }),
           );
         },

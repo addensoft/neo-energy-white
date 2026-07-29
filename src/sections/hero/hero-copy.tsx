@@ -30,30 +30,33 @@ export function HeroCopy({
   return (
     <div className="px-gutter absolute inset-x-0 bottom-[14%] z-10 flex flex-col items-center gap-6 text-center">
       {/*
-        Legibility scrim — the headline overlays the battery composition directly,
-        which sometimes lands over busy channel linework. A soft vignette keeps
-        type crisp without hiding the object. Fades in with the headline, not before.
+        Legibility scrim — the headline lands on the film's closing beat, a
+        light studio shot of the assembled pack, not a dark scene. A soft
+        light vignette (not a dark one) keeps dark ink type crisp against that
+        backdrop without hiding the object. Fades in with the headline, not before.
       */}
       <div
         ref={scrimRef}
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 scale-125 bg-[radial-gradient(ellipse_at_center,rgba(5,7,10,0.82)_0%,rgba(5,7,10,0.5)_50%,transparent_78%)]"
+        className="pointer-events-none absolute inset-0 -z-10 scale-125 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.88)_0%,rgba(255,255,255,0.6)_50%,transparent_78%)]"
       />
 
+      {/* Dark ink, matching the site's default text color — this lands on the
+          film's light closing shot (see scrim comment above), not a dark scene. */}
       <div ref={headlineRef}>
-        <Heading as="h1" size="hero" className="uppercase">
+        <Heading as="h1" size="hero" className="text-foreground uppercase">
           {siteConfig.tagline}
         </Heading>
       </div>
 
       <div ref={sublineRef}>
-        <Paragraph size="lead" className="max-w-xl text-balance">
+        <Paragraph size="lead" className="text-foreground/70 max-w-xl text-balance">
           {siteConfig.description}
         </Paragraph>
       </div>
 
       <div ref={signatureRef}>
-        <span className="font-display text-muted mt-2 inline-block text-sm tracking-[0.2em] opacity-80">
+        <span className="font-display text-foreground/70 mt-2 inline-block text-sm tracking-[0.2em]">
           {siteConfig.name}
         </span>
       </div>

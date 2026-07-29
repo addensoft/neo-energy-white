@@ -19,22 +19,49 @@ export const siteConfig = {
   // Placeholder pending the client's real inbox — same status as `url` above.
   contactEmail: "contact@neoenergy.sg",
   locale: "en-SG",
-  themeColor: "#05070A",
+  themeColor: "#FFFFFF",
 } as const;
 
 export type NavLink = {
   label: string;
   href: string;
+  /** Dropdown sub-items — "About" and "Services" render as hover/focus menus. */
+  children?: readonly { label: string; href: string }[];
 };
 
 /**
- * Primary navigation — per Creative Direction §12: five items maximum.
+ * Primary navigation — full multi-page structure (site is expanding beyond a
+ * single homepage). Career, Promo, and App are approved nav items whose
+ * destination pages don't exist yet — `href="#"` until they're built, same
+ * placeholder convention used everywhere else content isn't confirmed real.
  */
 export const primaryNav: readonly NavLink[] = [
-  { label: "Battery Packs", href: "#flagship-battery" },
-  { label: "Repair Services", href: "#repair" },
-  { label: "Why Choose Us", href: "#why-choose-us" },
-  { label: "Contact", href: "#cta" },
+  { label: "Home", href: "#hero" },
+  {
+    label: "About",
+    href: "#",
+    children: [
+      { label: "About Us", href: "#" },
+      { label: "Our Mission", href: "#" },
+      { label: "Our Team", href: "#" },
+      { label: "News", href: "#" },
+    ],
+  },
+  {
+    label: "Services",
+    href: "#",
+    children: [
+      { label: "Battery Systems", href: "#flagship-battery" },
+      { label: "Component Repair", href: "#repair" },
+      { label: "Maintenance", href: "#repair" },
+      { label: "Diagnostics", href: "#repair" },
+      { label: "Upgrades", href: "#" },
+    ],
+  },
+  { label: "Career", href: "#" },
+  { label: "Promo", href: "#" },
+  { label: "App", href: "#" },
+  { label: "Contact Us", href: "#cta" },
 ] as const;
 
 /**

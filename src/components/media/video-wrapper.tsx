@@ -22,9 +22,19 @@ type VideoWrapperProps = WithClassName<{
   src?: string;
   poster: string;
   alt: string;
+  /** Extra classes for the `<video>`/fallback `<Image>` itself — e.g. a subtle
+   * `filter` grade. Kept separate from `className` (the outer wrapper) since
+   * the two elements serve different layout roles. */
+  mediaClassName?: string;
 }>;
 
-export function VideoWrapper({ src, poster, alt, className }: VideoWrapperProps) {
+export function VideoWrapper({
+  src,
+  poster,
+  alt,
+  className,
+  mediaClassName,
+}: VideoWrapperProps) {
   const prefersReducedMotion = useReducedMotion();
   const showVideo = Boolean(src) && !prefersReducedMotion;
 
@@ -32,7 +42,7 @@ export function VideoWrapper({ src, poster, alt, className }: VideoWrapperProps)
     <div className={cn("relative h-full w-full overflow-hidden", className)}>
       {showVideo ? (
         <video
-          className="h-full w-full object-cover"
+          className={cn("h-full w-full object-cover", mediaClassName)}
           poster={poster}
           autoPlay
           muted
@@ -49,7 +59,7 @@ export function VideoWrapper({ src, poster, alt, className }: VideoWrapperProps)
           alt={alt}
           fill
           sizes="100vw"
-          className="object-cover"
+          className={cn("object-cover", mediaClassName)}
           priority={false}
         />
       )}

@@ -10,13 +10,23 @@ import { cn } from "@/lib/utils";
 /**
  * Button — Creative Direction §12 Premium UI Layout.
  *
- * "One primary style only — thin-bordered, dark fill, Ion Blue on hover, magnetic
- * micro-interaction (§4). No secondary button styles competing for attention."
+ * "One primary style only — white fill, solid ink border, Ion Blue border/text
+ * on hover, magnetic micro-interaction (§4). No secondary button styles
+ * competing for attention."
+ *
+ * White fill, matching the page — but a solid (not faint) ink-dark border and
+ * a resting elevation shadow give it real definition, so it doesn't wash out
+ * against the white background the way a near-invisible border would.
  *
  * `ghost` exists for understated secondary actions (e.g. Chapter 8's "Talk to Our
  * Engineers") — it reads as a text affordance, not a competing button treatment,
  * so it deliberately stays free of the sweep/glow below rather than violating the
  * one-primary-style rule by competing for attention.
+ *
+ * A one-off blue-outline variant briefly existed for the Footer's Contact
+ * button (an approved mockup showed it that way) but was reverted — every
+ * "Request Assessment" button site-wide, footer included, uses this same
+ * `primary` style, per the one-primary-style rule above.
  *
  * Single premium hover language, applied here once so every call site inherits it
  * for free: border + text shift to Ion Blue, a soft shared `--shadow-ion-glow`
@@ -31,7 +41,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "border border-border bg-graphite px-8 py-4 text-foreground hover:border-ion hover:text-ion hover:shadow-[var(--shadow-ion-glow)]",
+          "border border-foreground bg-background px-8 py-4 text-foreground shadow-[var(--shadow-elevation-sm)] hover:border-ion hover:text-ion hover:shadow-[var(--shadow-ion-glow)]",
         ghost: "px-2 py-3 text-muted transition-colors hover:text-foreground",
       },
       size: {
@@ -72,7 +82,7 @@ type ButtonProps = ButtonAsButton | ButtonAsLink;
 export function Button({ variant, size, className, children, ...props }: ButtonProps) {
   const classes = cn(buttonVariants({ variant, size }), className);
   const sweepRef = useRef<HTMLSpanElement>(null);
-  const isPrimary = (variant ?? "primary") === "primary";
+  const showSweep = (variant ?? "primary") !== "ghost";
 
   const handlePointerEnter = () => {
     const el = sweepRef.current;
@@ -84,14 +94,16 @@ export function Button({ variant, size, className, children, ...props }: ButtonP
     );
   };
 
-  const sweep = isPrimary ? (
+  const sweep = showSweep ? (
+    // Normal blend, not screen: screen mode needs a dark backdrop to show a
+    // lightening streak, which the light-theme button fill doesn't have.
     <span
       ref={sweepRef}
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 opacity-0 [mix-blend-mode:screen]"
+      className="pointer-events-none absolute inset-0 opacity-0"
       style={{
         background:
-          "linear-gradient(75deg, transparent 40%, rgba(90,200,255,0.45) 50%, transparent 60%)",
+          "linear-gradient(75deg, transparent 40%, rgba(46,143,255,0.35) 50%, transparent 60%)",
       }}
     />
   ) : null;

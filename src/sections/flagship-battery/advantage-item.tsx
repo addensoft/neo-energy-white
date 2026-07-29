@@ -2,6 +2,11 @@
 
 import { CheckCircle2 } from "lucide-react";
 
+/**
+ * Same small checklist-row component Why Choose NEO ENERGY uses — duplicated
+ * here rather than imported cross-section, since Why Choose Us is due for its
+ * own redesign later and shouldn't be able to break this section by changing.
+ */
 type AdvantageItemProps = {
   text: string;
   innerRef: (el: HTMLLIElement | null) => void;

@@ -48,15 +48,16 @@ export function CapabilityCard({
     <RevealWrapper variant="blur" delay={delay} duration={0.7}>
       <div
         onPointerEnter={handlePointerEnter}
-        className="group border-border bg-graphite/60 hover:border-ion/50 ease-engineered relative flex h-full flex-col gap-5 overflow-hidden rounded-md border p-7 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-ion-glow)]"
+        className="group border-border bg-graphite/60 hover:border-ion/50 ease-engineered relative flex h-full flex-col gap-3 overflow-hidden rounded-md border p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-ion-glow)] lg:gap-5 lg:p-7"
       >
+        {/* Normal blend, not screen — see button.tsx for why */}
         <div
           ref={sweepRef}
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-0 [mix-blend-mode:screen]"
+          className="pointer-events-none absolute inset-0 opacity-0"
           style={{
             background:
-              "linear-gradient(75deg, transparent 40%, rgba(90,200,255,0.45) 50%, transparent 60%)",
+              "linear-gradient(75deg, transparent 40%, rgba(46,143,255,0.35) 50%, transparent 60%)",
           }}
         />
 

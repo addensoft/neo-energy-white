@@ -30,28 +30,48 @@ export function TrustBar() {
   const sweepRef = useRef<HTMLDivElement>(null);
   const trustGroupRef = useRef<HTMLDivElement>(null);
   const logosRef = useRef<HTMLDivElement[]>([]);
+  const glowRef = useRef<HTMLDivElement>(null);
 
-  useTrustBarReveal({ sectionRef, shieldGroupRef, sweepRef, logosRef, trustGroupRef });
+  useTrustBarReveal({ sectionRef, shieldGroupRef, sweepRef, logosRef, trustGroupRef, glowRef });
 
   return (
     <Section
       id="trust-bar"
       ref={sectionRef}
-      className="border-border bg-void/95 relative min-h-0 justify-center border-y py-8 backdrop-blur-md lg:py-10"
+      className="bg-void/95 relative min-h-0 justify-center overflow-hidden py-10 backdrop-blur-md lg:py-14"
     >
-      {/* Ambient blue lighting */}
+      {/* Seams — a fading line, not a hard edge, so the scene above (Hero)
+          and below (Flagship Battery) bleed into this one rather than cutting. */}
       <div
         aria-hidden="true"
-        className="bg-ion/20 pointer-events-none absolute top-1/2 left-1/2 h-40 w-[60%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[100px]"
+        className="via-border pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent to-transparent"
       />
-      {/* Entrance light sweep */}
+      <div
+        aria-hidden="true"
+        className="via-border pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent to-transparent"
+      />
+      {/* Atmospheric wash — a faint top-down ion tint, so the bar reads as a
+          lit scene rather than a flat white strip. */}
+      <div
+        aria-hidden="true"
+        className="from-ion/[0.06] pointer-events-none absolute inset-0 bg-gradient-to-b via-transparent to-transparent"
+      />
+      {/* Ambient blue lighting — breathes slowly once the entrance completes (see reveal hook) */}
+      <div
+        ref={glowRef}
+        aria-hidden="true"
+        className="bg-ion/25 pointer-events-none absolute top-1/2 left-1/2 h-44 w-[65%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[110px]"
+      />
+      {/* Entrance light sweep — normal blend, not screen: screen mode needs a
+          dark backdrop to show a lightening streak, which a light-theme bar
+          doesn't have. A translucent ion-blue streak reads as a soft tint instead. */}
       <div
         ref={sweepRef}
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-0 [mix-blend-mode:screen]"
+        className="pointer-events-none absolute inset-0 opacity-0"
         style={{
           background:
-            "linear-gradient(75deg, transparent 42%, rgba(90,200,255,0.5) 50%, transparent 58%)",
+            "linear-gradient(75deg, transparent 42%, rgba(46,143,255,0.35) 50%, transparent 58%)",
         }}
       />
 
@@ -59,10 +79,12 @@ export function TrustBar() {
         {/* Left — Worldwide Authorized Agent */}
         <div
           ref={shieldGroupRef}
-          className="lg:border-border flex shrink-0 items-center gap-3 lg:border-r lg:pr-8"
+          className="lg:border-border flex shrink-0 items-center gap-3.5 lg:border-r lg:pr-8"
         >
-          <ShieldCheck className="text-ion h-6 w-6 shrink-0" strokeWidth={1.5} />
-          <span className="text-label-sm font-display block leading-tight text-white">
+          <div className="ring-ion/20 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ion/10 ring-1">
+            <ShieldCheck className="text-ion h-5 w-5" strokeWidth={1.5} />
+          </div>
+          <span className="text-label-sm font-display text-foreground block leading-tight">
             Worldwide
             <br />
             Authorized Agent
@@ -92,11 +114,11 @@ export function TrustBar() {
           ref={trustGroupRef}
           className="lg:border-border flex shrink-0 flex-col items-center gap-0.5 text-center lg:items-end lg:border-l lg:pl-8 lg:text-right"
         >
-          <span className="text-label-sm font-display block text-white">
+          <span className="text-label-sm font-display text-foreground block">
             Direct Agent
           </span>
           <span className="text-label-sm block font-mono leading-tight">
-            2 of the Top 3
+            <span className="text-ion text-base font-bold">2</span> of the Top 3
             <br />
             Technology
           </span>

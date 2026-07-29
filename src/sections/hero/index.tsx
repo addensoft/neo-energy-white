@@ -10,11 +10,10 @@ import { useHeroScroll } from "./use-hero-scroll";
 /**
  * Chapter 0 — Hero, scroll-scrubbed. Creative Direction §2, §5, §9 (revised).
  *
- * The real Hero film (herovideo.mp4 → 289-frame WebP sequence) plays back
- * entirely under scroll control: darkness/macro engineering detail → the
- * battery's reveal → a light-bloom finale the headline materialises out of.
- * See use-hero-scroll.ts for why this is a canvas frame sequence rather than
- * `<video>.currentTime` scrubbing, and hero-frames.ts for the source specs.
+ * The real Hero film (new-hero-video.mp4 → 361-frame WebP sequence) plays
+ * back entirely under scroll control. See use-hero-scroll.ts for why this is
+ * a canvas frame sequence rather than `<video>.currentTime` scrubbing, and
+ * hero-frames.ts for the source specs.
  */
 export function Hero() {
   const {
@@ -29,7 +28,7 @@ export function Hero() {
   const { phase } = useHeroPhase();
 
   return (
-    <Section id="hero" className="bg-void">
+    <Section id="hero" className="bg-void min-h-[100dvh] lg:min-h-screen">
       <canvas
         ref={canvasRef}
         aria-hidden="true"
@@ -38,7 +37,10 @@ export function Hero() {
 
       {!ready && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-muted font-mono text-xs tracking-[0.16em] uppercase">
+          {/* No frame has painted onto the canvas yet at this point, so this
+              sits directly on the Section's own (light) background — dark ink,
+              not light text. */}
+          <span className="text-foreground/70 font-mono text-xs tracking-[0.16em] uppercase">
             Loading {Math.round(loadProgress * 100)}%
           </span>
         </div>

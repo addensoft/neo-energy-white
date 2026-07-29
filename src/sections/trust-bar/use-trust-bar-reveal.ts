@@ -13,6 +13,7 @@ type Refs = {
   /** Populated via callback ref, one entry per partner mark, in display order. */
   logosRef: RefObject<HTMLDivElement[]>;
   trustGroupRef: RefObject<HTMLDivElement | null>;
+  glowRef: RefObject<HTMLDivElement | null>;
 };
 
 /**
@@ -22,7 +23,11 @@ type Refs = {
  * Sequence: bar fades/lifts in → light sweep unveils it → shield + "Worldwide
  * Authorized Agent" first → partner marks stagger in left to right → the
  * "Direct Agent" trust block resolves last. All eases are the site's
- * `EASE_ENGINEERED` curve — no bounce, no overshoot.
+ * `EASE_ENGINEERED` curve — no bounce, no overshoot. Once that one-shot
+ * sequence completes, the ambient glow starts a slow, continuous breathing
+ * loop (separate tween, own property, per the site's established pattern for
+ * idle motion layered on top of an entrance) so the bar doesn't go fully
+ * static — a small cinematic touch right after Hero's own ambient motion.
  */
 export function useTrustBarReveal({
   sectionRef,
@@ -30,6 +35,7 @@ export function useTrustBarReveal({
   sweepRef,
   logosRef,
   trustGroupRef,
+  glowRef,
 }: Refs) {
   const prefersReducedMotion = useReducedMotion();
 
@@ -74,7 +80,17 @@ export function useTrustBarReveal({
         )
         .to(shieldGroupRef.current, { opacity: 1, y: 0, duration: 0.7 }, "<0.3")
         .to(logos, { opacity: 1, y: 0, duration: 0.55, stagger: 0.11 }, "-=0.3")
-        .to(trustGroupRef.current, { opacity: 1, y: 0, duration: 0.7 }, "-=0.05");
+        .to(trustGroupRef.current, { opacity: 1, y: 0, duration: 0.7 }, "-=0.05")
+        .call(() => {
+          gsap.to(glowRef.current, {
+            scale: 1.2,
+            autoAlpha: 0.7,
+            duration: 4.5,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          });
+        });
     }, section);
 
     return () => {
