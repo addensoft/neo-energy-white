@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 
+import { WhatsAppFloat } from "@/components/layout";
 import { AppProviders } from "@/components/providers/app-providers";
 import { fontVariables } from "@/lib/fonts";
 import { siteConfig } from "@/lib/site-config";
@@ -56,7 +57,12 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
   return (
     <html lang="en" className={`${fontVariables} h-full antialiased`}>
       <body className="bg-background text-foreground flex min-h-full flex-col">
-        <AppProviders>{children}</AppProviders>
+        <AppProviders>
+          {children}
+          {/* Site-wide, so it rides along on standalone routes
+              (e.g. /under-construction) as well as the marketing pages. */}
+          <WhatsAppFloat />
+        </AppProviders>
       </body>
     </html>
   );

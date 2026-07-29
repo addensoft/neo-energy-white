@@ -18,6 +18,10 @@ export const siteConfig = {
   url: "https://www.neoenergy.sg",
   // Placeholder pending the client's real inbox — same status as `url` above.
   contactEmail: "contact@neoenergy.sg",
+  /** Client-confirmed WhatsApp line. `whatsappNumber` is digits-only for
+   * wa.me deep links; `whatsappDisplay` is the human-readable form. */
+  whatsappNumber: "6580712233",
+  whatsappDisplay: "+65 8071 2233",
   locale: "en-SG",
   themeColor: "#FFFFFF",
 } as const;

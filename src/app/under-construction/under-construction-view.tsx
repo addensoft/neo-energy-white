@@ -18,11 +18,6 @@ import { gsap } from "@/lib/gsap";
 import { EASE_ENGINEERED_CSS } from "@/lib/motion-tokens";
 import { siteConfig } from "@/lib/site-config";
 
-/** WhatsApp contact — digits only for the wa.me deep link, plus the
- * human-readable form shown in the footer bar. */
-const WHATSAPP_NUMBER = "6580712233";
-const WHATSAPP_DISPLAY = "+65 8071 2233";
-
 const FEATURES = [
   { icon: BatteryCharging, label: ["Innovative", "Technology"] },
   { icon: ShieldCheck, label: ["Premium", "Quality"] },
@@ -152,17 +147,19 @@ export function UnderConstructionView() {
             </div>
           </div>
 
-          {/* The render. Two different jobs by breakpoint, one element:
-              - mobile: an in-flow band between the strip above and the copy
-                below. Absolutely positioning it here (as desktop does) put
-                the battery straight through the labels on a narrow, tall
-                viewport.
-              - lg and up: lifted out of flow into the stage's lower 72% so
-                the closing line and CTA sit over the render's floor, as the
-                approved design shows. */}
+          {/* The render sits in normal flow between the strip above and the
+              closing copy below, at every breakpoint.
+
+              It was previously absolute-positioned behind the content on
+              desktop (so the closing line could sit over its floor, as the
+              mock shows). That only held on tall viewports: on a wide, short
+              one — a 14" laptop is ~1512x830 — `object-cover` scales the
+              render by width, so the battery grew and swallowed the copy.
+              Keeping it in flow costs the text-over-floor overlap but is
+              collision-proof at any aspect ratio. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none relative -mx-6 h-56 w-[calc(100%+3rem)] shrink-0 sm:h-72 lg:absolute lg:inset-x-0 lg:bottom-0 lg:z-0 lg:mx-0 lg:h-[72%] lg:w-full"
+            className="pointer-events-none relative -mx-6 h-56 w-[calc(100%+3rem)] shrink-0 sm:h-72 lg:-mx-10 lg:h-[22rem] lg:w-[calc(100%+5rem)] xl:h-[26rem]"
           >
             <Image
               src="/images/construction-page-artwork.webp"
@@ -175,7 +172,7 @@ export function UnderConstructionView() {
             {/* Dissolves the render's own top edge into the white page so
                 there's no visible seam where it starts. */}
             <div
-              className="absolute inset-x-0 top-0 h-2/5"
+              className="absolute inset-x-0 top-0 h-1/2"
               style={{
                 background:
                   "linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 35%, rgba(255,255,255,0.35) 70%, transparent 100%)",
@@ -209,14 +206,14 @@ export function UnderConstructionView() {
             {/* Design shows a handset here; the number is the client's
                 WhatsApp line, so it deep-links to wa.me. */}
             <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              href={`https://wa.me/${siteConfig.whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Message NEO ENERGY on WhatsApp at ${WHATSAPP_DISPLAY}`}
+              aria-label={`Message NEO ENERGY on WhatsApp at ${siteConfig.whatsappDisplay}`}
               className="hover:text-ion ease-engineered focus-visible:outline-ion flex items-center gap-2.5 text-[0.8rem] transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               <Phone className="text-ion h-4 w-4 shrink-0" strokeWidth={1.5} />
-              {WHATSAPP_DISPLAY}
+              {siteConfig.whatsappDisplay}
             </a>
 
             <a
