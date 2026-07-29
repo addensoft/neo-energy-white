@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 
-import { Footer, Navbar } from "@/components/layout";
 import { AppProviders } from "@/components/providers/app-providers";
 import { fontVariables } from "@/lib/fonts";
 import { siteConfig } from "@/lib/site-config";
@@ -47,15 +46,17 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+/**
+ * Root layout — document shell and app-wide providers only. The global
+ * Navbar/Footer chrome lives in the `(main)` route group's own layout
+ * instead, so standalone routes (e.g. `/under-construction`) can render
+ * without it. Providers stay here so *every* route gets them.
+ */
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en" className={`${fontVariables} h-full antialiased`}>
       <body className="bg-background text-foreground flex min-h-full flex-col">
-        <AppProviders>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </AppProviders>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );
