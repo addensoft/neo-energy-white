@@ -9,20 +9,53 @@ import { Container } from "@/components/ui";
 import { PartnerMark } from "./partner-mark";
 import { useTrustBarReveal } from "./use-trust-bar-reveal";
 
+// Official brand assets (public/logos/, via Wikimedia Commons' brand-logo
+// library — CALB only exists there as a transparent PNG; the rest are SVG).
+// `aspect` is each file's intrinsic width/height; heights are tuned per logo
+// for optical balance: plain wordmarks share one cap height, while NIO
+// (emblem stacked above the word) and Mazda (winged emblem beside it) run
+// taller so their type reads at a comparable size. See partner-mark.tsx for
+// why widths must never be equalised.
 const PARTNERS = [
-  { name: "CATL" },
-  { name: "CALB" },
-  { name: "BYD", ringed: true },
-  { name: "NIO" },
-  { name: "MAZDA", suffix: "(TBC)" },
+  {
+    name: "CATL",
+    src: "/logos/catl.svg",
+    aspect: 1024 / 216,
+    sizeClassName: "h-[22px] lg:h-[26px]",
+  },
+  {
+    name: "CALB",
+    src: "/logos/calb.png",
+    aspect: 1660 / 300,
+    sizeClassName: "h-[22px] lg:h-[26px]",
+  },
+  {
+    name: "BYD",
+    src: "/logos/byd.svg",
+    aspect: 1920 / 480,
+    sizeClassName: "h-[20px] lg:h-[24px]",
+  },
+  {
+    name: "NIO",
+    src: "/logos/nio.svg",
+    aspect: 2500 / 931,
+    sizeClassName: "h-[34px] lg:h-[40px]",
+  },
+  {
+    name: "Mazda",
+    src: "/logos/mazda.svg",
+    aspect: 2489.78 / 601.44,
+    sizeClassName: "h-[26px] lg:h-[30px]",
+    suffix: "(TBC)",
+  },
 ] as const;
 
 /**
  * Trust & Technology Bar — sits directly beneath the (frozen) Hero, ahead of
  * Chapter 1. A slim credibility strip, not a full-viewport chapter: overrides
  * `Section`'s default `min-h-screen` down to a compact bar. Partner marks are
- * rendered as typographic wordmarks (see partner-mark.tsx) rather than
- * fetched brand logo files, since none exist in this project.
+ * the manufacturers' official logos, mask-rendered to a single muted ink
+ * (see partner-mark.tsx).
  */
 export function TrustBar() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -76,7 +109,7 @@ export function TrustBar() {
       />
 
       <Container className="relative z-10 flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:gap-10">
-        {/* Left — Worldwide Authorized Agent */}
+        {/* Left — "We Are Authorized By", introducing the partner marks */}
         <div
           ref={shieldGroupRef}
           className="lg:border-border flex shrink-0 items-center gap-3.5 lg:border-r lg:pr-8"
@@ -85,9 +118,9 @@ export function TrustBar() {
             <ShieldCheck className="text-ion h-5 w-5" strokeWidth={1.5} />
           </div>
           <span className="text-label-sm font-display text-foreground block leading-tight">
-            Worldwide
+            We Are
             <br />
-            Authorized Agent
+            Authorized By
           </span>
         </div>
 
@@ -100,7 +133,9 @@ export function TrustBar() {
             <PartnerMark
               key={partner.name}
               name={partner.name}
-              ringed={"ringed" in partner ? partner.ringed : undefined}
+              src={partner.src}
+              aspect={partner.aspect}
+              sizeClassName={partner.sizeClassName}
               suffix={"suffix" in partner ? partner.suffix : undefined}
               innerRef={(el) => {
                 if (el) logosRef.current[index] = el;
@@ -118,9 +153,9 @@ export function TrustBar() {
             Direct Agent
           </span>
           <span className="text-label-sm block font-mono leading-tight">
-            <span className="text-ion text-base font-bold">2</span> of the Top 3
+            of the Top <span className="text-ion text-base font-bold">2</span>
             <br />
-            Technology
+            EV / Hybrid Battery
           </span>
         </div>
       </Container>

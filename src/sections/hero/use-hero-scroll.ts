@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useHeroPhase } from "@/components/providers/hero-phase-provider";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { EASE_ENGINEERED_CSS } from "@/lib/motion-tokens";
 
 import { HERO_FRAME_COUNT, HERO_TEXT_TIMING, VALUE_STATEMENT_RANGE } from "./hero-frames";
 import { useImageSequence } from "./use-image-sequence";
@@ -42,6 +43,7 @@ export function useHeroScroll() {
   const sublineRef = useRef<HTMLDivElement>(null);
   const signatureRef = useRef<HTMLDivElement>(null);
   const scrimRef = useRef<HTMLDivElement>(null);
+  const introRef = useRef<HTMLDivElement>(null);
   const statementRefs = useRef<HTMLDivElement[]>([]);
   const sectionRef = useRef<HTMLElement>(null);
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
@@ -146,6 +148,9 @@ export function useHeroScroll() {
       drawFrame(HERO_FRAME_COUNT - 1);
       gsap.set(textEls, { autoAlpha: 1, filter: "blur(0px)" });
       gsap.set(statementEls, { autoAlpha: 0 });
+      // Reduced motion lands straight on the film's settled end state, so
+      // the opening title card has nothing left to introduce.
+      gsap.set(introRef.current, { autoAlpha: 0 });
       setPhase("settled");
       return;
     }
@@ -153,6 +158,15 @@ export function useHeroScroll() {
     gsap.set(textEls, { autoAlpha: 0, filter: "blur(20px)" });
     gsap.set(statementEls, { autoAlpha: 0, y: 14 });
     drawFrame(0);
+
+    // The title card's one-shot arrival. It deliberately has no auto
+    // fade-out — dismissing it is the scroll timeline's job below, so it
+    // stays up as long as the visitor hasn't moved.
+    const introEntrance = gsap.fromTo(
+      introRef.current,
+      { autoAlpha: 0, y: 18 },
+      { autoAlpha: 1, y: 0, duration: 1.1, ease: EASE_ENGINEERED_CSS },
+    );
 
     const ctx = gsap.context(() => {
       const frameProxy = { frame: 0 };
@@ -181,6 +195,26 @@ export function useHeroScroll() {
           ease: "none",
           duration: 1,
           onUpdate: () => drawFrame(Math.round(frameProxy.frame)),
+        },
+        0,
+      );
+
+      // The title card's exit, driven by scroll rather than a timer: it
+      // dissolves as the visitor scrolls down and — because the whole
+      // timeline is scrubbed — comes straight back if they scroll up.
+      // `immediateRender: false` matters: without it GSAP would apply this
+      // tween's start values the moment the timeline is built, stomping the
+      // one-shot entrance above. It clears well before the first value
+      // statement (VALUE_STATEMENT_RANGE.start) so the two never overlap.
+      tl.fromTo(
+        introRef.current,
+        { autoAlpha: 1, y: 0 },
+        {
+          autoAlpha: 0,
+          y: -18,
+          duration: VALUE_STATEMENT_RANGE.start * 0.7,
+          ease: "power2.in",
+          immediateRender: false,
         },
         0,
       );
@@ -254,6 +288,7 @@ export function useHeroScroll() {
     return () => {
       window.visualViewport?.removeEventListener("resize", handleViewportResize);
       window.clearTimeout(refreshTimeout);
+      introEntrance.kill();
       ctx.revert();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -265,6 +300,7 @@ export function useHeroScroll() {
     sublineRef,
     signatureRef,
     scrimRef,
+    introRef,
     statementRefs,
     sectionRef,
     scrollTriggerRef,

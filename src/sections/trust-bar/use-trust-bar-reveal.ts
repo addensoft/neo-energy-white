@@ -20,8 +20,8 @@ type Refs = {
  * One-shot GSAP entrance timeline for the Trust & Technology Bar, gated on
  * scroll-into-view (`once: true` — this bar never re-plays once seen).
  *
- * Sequence: bar fades/lifts in → light sweep unveils it → shield + "Worldwide
- * Authorized Agent" first → partner marks stagger in left to right → the
+ * Sequence: bar fades/lifts in → light sweep unveils it → shield + "We Are
+ * Authorized By" first → partner marks stagger in left to right → the
  * "Direct Agent" trust block resolves last. All eases are the site's
  * `EASE_ENGINEERED` curve — no bounce, no overshoot. Once that one-shot
  * sequence completes, the ambient glow starts a slow, continuous breathing

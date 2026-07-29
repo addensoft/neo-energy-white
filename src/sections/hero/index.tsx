@@ -35,6 +35,7 @@ export function Hero() {
     sublineRef,
     signatureRef,
     scrimRef,
+    introRef,
     statementRefs,
     sectionRef,
     scrollTriggerRef,
@@ -72,7 +73,7 @@ export function Hero() {
         </div>
       )}
 
-      <HeroIntro ready={ready} />
+      <HeroIntro introRef={introRef} />
 
       <HeroValueStatements statementRefs={statementRefs} />
 

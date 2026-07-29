@@ -1,49 +1,25 @@
-"use client";
-
-import { useEffect, useRef } from "react";
+import type { RefObject } from "react";
 
 import { Heading, Paragraph } from "@/components/ui";
-import { useReducedMotion } from "@/hooks/use-reduced-motion";
-import { gsap } from "@/lib/gsap";
-import { EASE_ENGINEERED_CSS } from "@/lib/motion-tokens";
 
 /**
- * HeroIntro — a brief premium title card ("WELCOME TO / NEO ENERGY /
- * Engineering the Future of EV Battery Technology.") that plays once the
- * film's frames are loaded, before the user has necessarily started
- * scrolling: fade in, hold, fade out — a keynote-style opening beat, not
- * part of the scroll-scrubbed timeline. Purely decorative/ephemeral
- * (`pointer-events-none`, `aria-hidden`) — it never blocks scrolling, and
- * the real accessible headline/subline/name already exist in `HeroCopy`.
+ * HeroIntro — the opening title card ("WELCOME TO / NEO ENERGY / Engineering
+ * the Future of EV Battery Technology.").
+ *
+ * Presentational only: it fades in once the film's frames are ready, then
+ * hands over to scroll — scrolling down dissolves it, scrolling back up
+ * brings it right back. Both beats are driven from `use-hero-scroll.ts`
+ * (the same timeline the film and the value statements ride), rather than a
+ * self-contained timer here, so the card can never fall out of step with
+ * the scroll position.
+ *
+ * Purely decorative (`pointer-events-none`, `aria-hidden`) — it never blocks
+ * scrolling, and the real accessible headline/subline/name live in `HeroCopy`.
  */
-export function HeroIntro({ ready }: { ready: boolean }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!ready || !el) return;
-
-    if (prefersReducedMotion) {
-      gsap.set(el, { autoAlpha: 0 });
-      return;
-    }
-
-    gsap.set(el, { autoAlpha: 0, y: 18 });
-
-    const tl = gsap.timeline();
-    tl.to(el, { autoAlpha: 1, y: 0, duration: 1.1, ease: EASE_ENGINEERED_CSS })
-      .to(el, { autoAlpha: 1, duration: 2.4 })
-      .to(el, { autoAlpha: 0, y: -18, duration: 0.9, ease: "power2.in" });
-
-    return () => {
-      tl.kill();
-    };
-  }, [ready, prefersReducedMotion]);
-
+export function HeroIntro({ introRef }: { introRef: RefObject<HTMLDivElement | null> }) {
   return (
     <div
-      ref={containerRef}
+      ref={introRef}
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center opacity-0"
     >
