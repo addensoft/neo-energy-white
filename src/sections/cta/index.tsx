@@ -10,11 +10,13 @@ import { siteConfig } from "@/lib/site-config";
 import { useCtaReveal } from "./use-cta-reveal";
 
 /**
- * Final CTA — the approved Earth image (unmodified — same asset, same
- * animation) now spans the entire section instead of a 56% column, with the
- * headline/paragraph/CTA floating over it on the left, protected by a
- * left-to-right dark gradient rather than sitting in a separate solid
- * column. One full-width cinematic scene, not a two-column layout.
+ * Final CTA — approved client reference (v2): the Earth image IS the section,
+ * edge to edge, with no gradient/scrim washing over it — the client
+ * explicitly rejected the earlier left-to-right white wash for reading as a
+ * "two column" layout. Text sits directly on the image (white ink, since the
+ * page's default dark-ink type isn't legible here), relying on the photo's
+ * own dark upper-left starfield for contrast — the same reason Hero's
+ * copy gets away with no scrim either.
  */
 export function CTA() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -38,23 +40,25 @@ export function CTA() {
   });
 
   return (
-    <Section id="cta" ref={sectionRef} className="bg-void relative overflow-hidden">
-      {/* Earth image — full-width/height, the scene's background, not a
-          column. Absolutely positioned against Section's own box (not a
-          flex/grid sibling) so its height is never at the mercy of
-          flex-stretch vs. percentage-height resolution against an
-          auto-height container. */}
-      <div
-        ref={imageFloatRef}
-        className="relative h-[46vh] w-full lg:absolute lg:inset-0 lg:h-auto lg:w-full"
-      >
+    <Section
+      id="cta"
+      ref={sectionRef}
+      className="bg-void relative min-h-[46vh] overflow-hidden lg:min-h-[65vh]"
+    >
+      {/* Earth image — the full banner background at every breakpoint (not
+          just desktop): the approved mobile reference shows the headline/
+          paragraph/button sitting directly on the image, not stacked below a
+          separate strip of it. Absolutely positioned against Section's own
+          box so its height is never at the mercy of flex-stretch vs.
+          percentage-height resolution against an auto-height container. */}
+      <div ref={imageFloatRef} className="absolute inset-0 h-full w-full">
         <div ref={imageScaleRef} className="absolute inset-0 overflow-hidden">
           <Image
             src="/images/cta-earth.webp"
             alt="Earth at night from orbit, illuminated by connected global city lights"
             fill
             sizes="100vw"
-            className="object-cover object-[58%_42%]"
+            className="object-cover object-[58%_28%]"
             priority={false}
           />
           {/* Soft atmosphere glow */}
@@ -76,40 +80,33 @@ export function CTA() {
         </div>
       </div>
 
-      {/* Left-to-right atmospheric gradient — readability only, image stays
-          visible through it. A soft blue-tinted wash (not flat grey/white),
-          echoing Hero's own cool cinematic light rather than a neutral scrim —
-          white page → faint blue atmosphere → transparent over the Earth. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[1]"
-        style={{
-          background:
-            "linear-gradient(90deg, var(--palette-void) 0%, rgba(232,241,252,0.9) 26%, rgba(219,233,250,0.5) 48%, rgba(210,228,250,0.16) 66%, transparent 82%)",
-        }}
-      />
-
-      {/* Content — floats over the image/gradient, no separate solid column.
-          lg:mt-6 nudges it down ~24px for better balance against the Earth —
-          composition only, gap/padding inside the block are untouched. */}
-      <div className="px-gutter lg:px-gutter-lg relative z-10 flex flex-col justify-center gap-8 py-20 lg:mt-6 lg:max-w-[38vw] lg:py-0">
+      {/* Content — floats directly on the image, no scrim, no separate
+          column. Section shrank (was min-h-screen/70vh — 30-35% smaller per
+          the client), so the old lg:mt-16 downward nudge is dropped; letting
+          Section's own justify-center handle balance keeps it from reading
+          as dead space above the heading now that there's less room. */}
+      <div className="px-gutter lg:px-gutter-lg relative z-10 flex flex-col justify-center gap-6 py-8 lg:max-w-[38vw] lg:py-0">
         <div ref={headingRef}>
-          <Heading as="h2" size="h2" className="uppercase">
-            Let&apos;s Build the Future Together
+          <Heading as="h2" size="h2" className="text-white uppercase">
+            Let&apos;s Build The
+            <br />
+            Future of <span className="text-ion">Energy.</span>
           </Heading>
         </div>
 
         <div ref={paragraphRef}>
-          <Paragraph size="body" className="max-w-md text-balance">
-            From flagship battery engineering to component-level repair, NEO ENERGY
-            partners with fleets, dealerships, and enterprises building Singapore&apos;s
-            electric future — reliable technology, backed by long-term engineering
-            support.
+          <Paragraph size="body" className="max-w-md text-balance text-white/80">
+            Partner with NEO ENERGY for reliable, advanced and future-ready EV
+            battery solutions.
           </Paragraph>
         </div>
 
         <div ref={ctaRef}>
-          <Button href={`mailto:${siteConfig.contactEmail}`} variant="primary">
+          <Button
+            href={`mailto:${siteConfig.contactEmail}`}
+            variant="primary"
+            className="border-white bg-transparent text-white"
+          >
             Request Assessment
           </Button>
         </div>

@@ -15,8 +15,7 @@ type Refs = {
   /** Inner node — entrance, then idle float once the entrance settles. */
   videoRevealRef: RefObject<HTMLDivElement | null>;
   headlineRef: RefObject<HTMLDivElement | null>;
-  descriptionRef: RefObject<HTMLDivElement | null>;
-  specsRef: RefObject<HTMLDivElement[]>;
+  itemsRef: RefObject<HTMLLIElement[]>;
   ctaRef: RefObject<HTMLDivElement | null>;
 };
 
@@ -30,16 +29,15 @@ type Refs = {
  *
  * Sequence, paced calmly (generous gaps, no beat overlapping the next by more
  * than ~a third of its own duration): video reveals (fade/lift/scale) →
- * headline mask-reveals → description fades → spec items stagger in one at a
- * time → CTA settles in shortly after the specs finish, not on top of them.
+ * headline mask-reveals → checklist items stagger in one at a time → CTA
+ * settles in shortly after, not on top of them.
  */
 export function useFlagshipBatteryReveal({
   sectionRef,
   videoParallaxRef,
   videoRevealRef,
   headlineRef,
-  descriptionRef,
-  specsRef,
+  itemsRef,
   ctaRef,
 }: Refs) {
   const prefersReducedMotion = useReducedMotion();
@@ -51,26 +49,19 @@ export function useFlagshipBatteryReveal({
 
     if (prefersReducedMotion) {
       gsap.set(
-        [
-          videoReveal,
-          headlineRef.current,
-          descriptionRef.current,
-          ctaRef.current,
-          ...specsRef.current,
-        ],
+        [videoReveal, headlineRef.current, ctaRef.current, ...itemsRef.current],
         { opacity: 1, y: 0, scale: 1, clipPath: "inset(0 0% 0 0)" },
       );
       return;
     }
 
-    const specs = specsRef.current;
+    const items = itemsRef.current;
     let idleFloat: gsap.core.Tween | null = null;
 
     const ctx = gsap.context(() => {
       gsap.set(videoReveal, { opacity: 0, y: 28, scale: 0.96 });
       gsap.set(headlineRef.current, { clipPath: "inset(0 100% 0 0)", opacity: 0 });
-      gsap.set(descriptionRef.current, { opacity: 0, y: 14 });
-      gsap.set(specs, { opacity: 0, y: 10 });
+      gsap.set(items, { opacity: 0, y: 10 });
       gsap.set(ctaRef.current, { opacity: 0, y: 10 });
 
       const tl = gsap.timeline({
@@ -96,8 +87,7 @@ export function useFlagshipBatteryReveal({
           { clipPath: "inset(0 0% 0 0)", opacity: 1, duration: 1 },
           "-=0.5",
         )
-        .to(descriptionRef.current, { opacity: 1, y: 0, duration: 0.7 }, "-=0.35")
-        .to(specs, { opacity: 1, y: 0, duration: 0.5, stagger: 0.12 }, "-=0.1")
+        .to(items, { opacity: 1, y: 0, duration: 0.5, stagger: 0.12 }, "-=0.4")
         .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, "+=0.15");
 
       // Very subtle continuous parallax — separate element, separate trigger.

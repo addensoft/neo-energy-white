@@ -39,7 +39,7 @@ export function StatItem({
   return (
     <div
       ref={innerRef}
-      className="group flex flex-1 flex-col items-center gap-1.5 px-4 py-8 text-center lg:px-6 lg:py-2"
+      className="group flex flex-1 flex-col items-center gap-1.5 px-2 py-1 text-center lg:px-6 lg:py-2"
     >
       {/* Premium icon badge — soft gradient + inset highlight + resting ion
           glow, brightening further on hover. Kept deliberately understated. */}

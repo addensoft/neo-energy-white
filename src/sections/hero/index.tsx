@@ -28,7 +28,7 @@ export function Hero() {
   const { phase } = useHeroPhase();
 
   return (
-    <Section id="hero" className="bg-void">
+    <Section id="hero" className="bg-void min-h-[100dvh] lg:min-h-screen">
       <canvas
         ref={canvasRef}
         aria-hidden="true"

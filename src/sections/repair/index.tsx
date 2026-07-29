@@ -60,7 +60,7 @@ const CAPABILITIES = [
  */
 export function Repair() {
   return (
-    <Section id="repair" className="bg-void relative py-24 lg:py-32">
+    <Section id="repair" className="bg-void relative py-16 lg:py-32">
       {/* Ambient blue lighting — same treatment (opacity/blur) as every other
           full section, so the light reads as one consistent environment. */}
       <div
@@ -68,7 +68,7 @@ export function Repair() {
         className="bg-ion/15 pointer-events-none absolute top-1/2 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[140px]"
       />
 
-      <Container className="relative z-10 flex flex-col items-center gap-16 text-center">
+      <Container className="relative z-10 flex flex-col items-center gap-10 text-center lg:gap-16">
         <div className="flex flex-col items-center gap-4">
           <RevealWrapper variant="fade">
             <span className="text-ion text-label-sm font-mono">
@@ -90,7 +90,7 @@ export function Repair() {
           </RevealWrapper>
         </div>
 
-        <div className="grid w-full grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8">
+        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8">
           {CAPABILITIES.map((capability, index) => (
             <CapabilityCard
               key={capability.title}

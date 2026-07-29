@@ -297,7 +297,7 @@ export function Navbar() {
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((value) => !value)}
-            className="text-foreground ease-engineered flex h-9 w-9 items-center justify-center transition-colors duration-300 lg:hidden"
+            className="text-foreground ease-engineered flex h-11 w-11 items-center justify-center transition-colors duration-300 lg:hidden"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>

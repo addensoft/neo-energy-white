@@ -113,10 +113,15 @@ export function Authority() {
           ref={containerRef}
           className="border-border bg-background rounded-[22px] border px-6 py-10 shadow-[0_24px_60px_-24px_rgba(15,23,42,0.14)] lg:px-10 lg:py-12"
         >
-          <div className="flex flex-col divide-y divide-border lg:flex-row lg:items-stretch lg:divide-y-0">
-            {STATS.map((stat, index) => (
-              <Fragment key={stat.label}>
-                {index > 0 && <ColumnDivider />}
+          {/* Mobile: a 2-column grid (row 1: solutions/expertise, row 2: the two
+              numeric stats, row 3: "Global" spanning both columns, centered) —
+              not five stacked cards. The last item's wrapper uses `lg:contents`
+              so it's transparent to layout at desktop, where this reverts to
+              the original flex-row with explicit fading dividers between items. */}
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 lg:flex lg:flex-row lg:items-stretch lg:gap-x-0 lg:gap-y-0">
+            {STATS.map((stat, index) => {
+              const isLast = index === STATS.length - 1;
+              const item = (
                 <StatItem
                   icon={stat.icon}
                   value={stat.value}
@@ -138,8 +143,19 @@ export function Authority() {
                     if (el) underlinesRef.current[index] = el;
                   }}
                 />
-              </Fragment>
-            ))}
+              );
+
+              return (
+                <Fragment key={stat.label}>
+                  {index > 0 && <ColumnDivider />}
+                  {isLast ? (
+                    <div className="col-span-2 lg:contents">{item}</div>
+                  ) : (
+                    item
+                  )}
+                </Fragment>
+              );
+            })}
           </div>
         </div>
       </Container>

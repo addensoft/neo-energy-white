@@ -69,6 +69,15 @@ export function useHeroScroll() {
     let sy: number;
     let sw: number;
     let sh: number;
+
+    // Always a full "cover" fill — the canvas's destination rect is the
+    // entire box (0,0,width,height), no exceptions. An earlier mobile
+    // letterboxing safeguard (floor the visible source width, shrink the
+    // destination to match) was removed: on a short mobile Hero height
+    // against 16:9 footage, it was letterboxing away roughly half the
+    // screen — the opposite of "the video fills the viewport" the site
+    // needs. Trade-off accepted: narrow viewports crop more aggressively
+    // into the frame's edges, but there's never a visible gap.
     if (imgRatio > canvasRatio) {
       sh = img.naturalHeight;
       sw = sh * canvasRatio;
@@ -185,7 +194,27 @@ export function useHeroScroll() {
 
     ScrollTrigger.refresh();
 
-    return () => ctx.revert();
+    // Mobile browsers (iOS Safari in particular) resize the *visual*
+    // viewport as the address bar/toolbar collapses or expands mid-scroll,
+    // without always firing a plain `window.resize` GSAP's own ScrollTrigger
+    // auto-refresh listens for. Left unhandled, the pin-spacer's height
+    // (calculated from Hero's dvh-based height at setup time) can drift out
+    // of sync with the real viewport, leaving blank scrollable space before
+    // or after the pinned film. `visualViewport.resize` is the reliable,
+    // purpose-built signal for exactly this — debounced so a fast toolbar
+    // animation doesn't thrash `refresh()` mid-transition.
+    let refreshTimeout: number | undefined;
+    const handleViewportResize = () => {
+      window.clearTimeout(refreshTimeout);
+      refreshTimeout = window.setTimeout(() => ScrollTrigger.refresh(), 120);
+    };
+    window.visualViewport?.addEventListener("resize", handleViewportResize);
+
+    return () => {
+      window.visualViewport?.removeEventListener("resize", handleViewportResize);
+      window.clearTimeout(refreshTimeout);
+      ctx.revert();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, prefersReducedMotion, setPhase]);
 

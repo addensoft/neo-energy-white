@@ -1,60 +1,49 @@
 "use client";
 
-import {
-  BatteryCharging,
-  BatteryFull,
-  Droplets,
-  LayoutGrid,
-  Timer,
-  TrendingUp,
-  Weight,
-  Zap,
-} from "lucide-react";
 import { useRef } from "react";
 
 import { VideoWrapper } from "@/components/media";
 import { Section } from "@/components/section";
-import { Button, Container, Heading, Paragraph } from "@/components/ui";
+import { Button, Container, Heading } from "@/components/ui";
 
-import { SpecItem } from "./spec-item";
+import { AdvantageItem } from "./advantage-item";
 import { useFlagshipBatteryReveal } from "./use-flagship-battery-reveal";
 
-const SPECS = [
-  { icon: BatteryFull, value: "77.94 kWh", label: "Total Energy" },
-  { icon: BatteryCharging, value: "214 Ah", label: "Rated Capacity" },
-  { icon: Zap, value: "364.24 V", label: "Nominal Voltage" },
-  { icon: Weight, value: "≤ 550 kg", label: "Total Weight" },
-  { icon: TrendingUp, value: "140+ Wh/kg", label: "Energy Density" },
-  { icon: Timer, value: "15 min", label: "Fast Charge (30–80%)" },
-  { icon: Droplets, value: "Liquid", label: "Cooling System" },
-  { icon: LayoutGrid, value: "1P116S", label: "Configuration" },
+// Client-approved copy, per the attached reference — same wording Why Choose
+// Us uses, duplicated locally since the two sections are decoupled on
+// purpose (Why Choose Us is due for its own redesign later).
+const ADVANTAGES = [
+  "Singapore's authorised EV battery engineering specialist",
+  "Component-level battery diagnostics and repair",
+  "Partnerships with leading global battery manufacturers",
+  "Advanced battery testing and thermal management",
+  "Safety-first engineering and certified repair standards",
+  "Trusted by fleets, dealerships and enterprise customers",
 ] as const;
 
 /**
  * Flagship Battery Overview — the next scene after the Trust & Technology Bar,
- * before The Object. Business-positioning correction (client feedback): NEO
- * ENERGY sells, engineers, and supports EV battery systems — this pack is one
- * example of that, not the sole product. Copy must not read as if this single
- * unit is the entirety of what NEO ENERGY offers. Reuses the `VideoWrapper`
- * scaffold built (and unused) since Sprint 1 — an ambient autoplay/muted/loop
- * video, not a scroll-scrubbed frame sequence like Hero.
+ * before Component-Level Repair. Right side now carries the "Why Choose NEO
+ * ENERGY" checklist (per the approved reference) instead of the earlier spec
+ * sheet — the standalone Why Choose Us section further down the page is
+ * untouched and will get its own redesign separately. Reuses the same
+ * `VideoWrapper` scaffold as before — an ambient autoplay/muted/loop video,
+ * not a scroll-scrubbed frame sequence like Hero.
  */
 export function FlagshipBattery() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoParallaxRef = useRef<HTMLDivElement>(null);
   const videoRevealRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
-  const descriptionRef = useRef<HTMLDivElement>(null);
+  const itemsRef = useRef<HTMLLIElement[]>([]);
   const ctaRef = useRef<HTMLDivElement>(null);
-  const specsRef = useRef<HTMLDivElement[]>([]);
 
   useFlagshipBatteryReveal({
     sectionRef,
     videoParallaxRef,
     videoRevealRef,
     headlineRef,
-    descriptionRef,
-    specsRef,
+    itemsRef,
     ctaRef,
   });
 
@@ -67,14 +56,17 @@ export function FlagshipBattery() {
       />
 
       <Container className="relative z-10 grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:items-stretch lg:gap-20">
-        {/* Left — flagship battery video. Fixed aspect on mobile (its own row,
-            sized to content); stretches to match the content column's full
-            height on desktop so it reads as one cinematic panel rather than a
-            small box floating in dead space. */}
+        {/* Left — flagship battery video. Fixed aspect on mobile (its own
+            row, sized to content); on desktop, starts flush with the
+            heading's top edge and runs to 105% of the checklist column's
+            height — a deliberate slight overhang past the button, not a
+            plain equal-height match. `object-cover` inside `VideoWrapper`
+            means the extra height just crops the footage differently, no
+            stretching/distortion. */}
         <div ref={videoParallaxRef} className="relative lg:h-full">
           <div
             ref={videoRevealRef}
-            className="relative aspect-video min-h-[22rem] overflow-hidden rounded-lg shadow-[0_20px_50px_-24px_rgba(15,23,42,0.28)] lg:aspect-auto lg:h-full lg:min-h-0"
+            className="relative aspect-video overflow-hidden rounded-lg shadow-[0_20px_50px_-24px_rgba(15,23,42,0.28)] lg:aspect-auto lg:h-[105%]"
           >
             <VideoWrapper
               src="/videos/flagship-battery.mp4"
@@ -98,44 +90,29 @@ export function FlagshipBattery() {
           </div>
         </div>
 
-        {/* Right — headline, spec grid, CTA */}
-        <div className="flex flex-col gap-10">
-          <div ref={headlineRef} className="flex flex-col gap-5">
-            <span className="text-ion text-spec-value font-display">77.94 kWh</span>
+        {/* Right — Why Choose NEO ENERGY heading, checklist, CTA */}
+        <div className="flex flex-col gap-8">
+          <div ref={headlineRef}>
             <Heading as="h2" size="h2" className="uppercase">
-              Advanced EV
-              <br />
-              Battery Solutions
+              Why Choose NEO ENERGY?
             </Heading>
           </div>
 
-          <div ref={descriptionRef}>
-            <Paragraph size="body" className="max-w-xl">
-              NEO ENERGY supplies, engineers, and supports advanced EV battery systems
-              for fleets, dealerships, and manufacturers — from cell chemistry to
-              enclosure, validated through CFD thermal simulation and CAE vibration
-              testing. Shown here: our 77.94kWh flagship LFP pack, one example of the
-              battery solutions we deliver.
-            </Paragraph>
-          </div>
-
-          <div className="grid grid-cols-2 gap-x-8 gap-y-5">
-            {SPECS.map((spec, index) => (
-              <SpecItem
-                key={spec.label}
-                icon={spec.icon}
-                value={spec.value}
-                label={spec.label}
+          <ul className="flex flex-col gap-4">
+            {ADVANTAGES.map((text, index) => (
+              <AdvantageItem
+                key={text}
+                text={text}
                 innerRef={(el) => {
-                  if (el) specsRef.current[index] = el;
+                  if (el) itemsRef.current[index] = el;
                 }}
               />
             ))}
-          </div>
+          </ul>
 
           <div ref={ctaRef}>
-            <Button href="#repair" variant="primary">
-              Explore Battery Solutions
+            <Button href="#cta" variant="primary">
+              Learn More About NEO ENERGY
             </Button>
           </div>
         </div>

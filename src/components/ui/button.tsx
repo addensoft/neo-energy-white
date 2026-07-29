@@ -23,6 +23,11 @@ import { cn } from "@/lib/utils";
  * so it deliberately stays free of the sweep/glow below rather than violating the
  * one-primary-style rule by competing for attention.
  *
+ * A one-off blue-outline variant briefly existed for the Footer's Contact
+ * button (an approved mockup showed it that way) but was reverted — every
+ * "Request Assessment" button site-wide, footer included, uses this same
+ * `primary` style, per the one-primary-style rule above.
+ *
  * Single premium hover language, applied here once so every call site inherits it
  * for free: border + text shift to Ion Blue, a soft shared `--shadow-ion-glow`
  * (same token `CapabilityCard` uses — one glow style site-wide), and a one-shot
@@ -77,7 +82,7 @@ type ButtonProps = ButtonAsButton | ButtonAsLink;
 export function Button({ variant, size, className, children, ...props }: ButtonProps) {
   const classes = cn(buttonVariants({ variant, size }), className);
   const sweepRef = useRef<HTMLSpanElement>(null);
-  const isPrimary = (variant ?? "primary") === "primary";
+  const showSweep = (variant ?? "primary") !== "ghost";
 
   const handlePointerEnter = () => {
     const el = sweepRef.current;
@@ -89,7 +94,7 @@ export function Button({ variant, size, className, children, ...props }: ButtonP
     );
   };
 
-  const sweep = isPrimary ? (
+  const sweep = showSweep ? (
     // Normal blend, not screen: screen mode needs a dark backdrop to show a
     // lightening streak, which the light-theme button fill doesn't have.
     <span
