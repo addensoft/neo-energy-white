@@ -39,7 +39,7 @@ const STATS = [
     value: 2,
     decimals: 0,
     suffix: " of Top 3",
-    label: "Global Battery Technology Partners",
+    label: "Direct Agent of the Top 2 EV / Hybrid Battery",
     underlineWidth: 36,
   },
   {
