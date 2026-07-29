@@ -28,3 +28,24 @@ export const HERO_TEXT_TIMING = {
   sublineStart: 0.82,
   signatureStart: 0.9,
 } as const;
+
+/**
+ * Scrolling value statements — one engineering credibility line at a time,
+ * cycling across the "B-roll" portion of the scroll range, well before
+ * `HERO_TEXT_TIMING.scrimStart` (0.76) so they never overlap the headline
+ * reveal. Same six lines as Why Choose NEO ENERGY's checklist, reused here
+ * as a premium keynote-style highlight reel.
+ */
+export const VALUE_STATEMENTS = [
+  "Singapore's authorised EV battery engineering specialist",
+  "Component-level battery diagnostics and repair",
+  "Partnerships with leading global battery manufacturers",
+  "Advanced battery testing and thermal management",
+  "Safety-first engineering and certified repair standards",
+  "Trusted by fleets, dealerships and enterprise customers",
+] as const;
+
+/** The statements cycle within this scroll-progress window — evenly split
+ * into one slot per statement (fade in → hold → fade out, non-overlapping),
+ * ending well before the headline reveal begins. */
+export const VALUE_STATEMENT_RANGE = { start: 0.06, end: 0.7 } as const;

@@ -1,11 +1,25 @@
 "use client";
 
 import Lenis from "lenis";
-import { useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import type { WithChildren } from "@/types";
+
+/**
+ * LenisContext — exposes the live Lenis instance (once instantiated) so a
+ * few chapters can drive scroll programmatically — currently just Hero's
+ * play/pause control, which calls `lenis.scrollTo()` to auto-advance through
+ * the pinned film instead of requiring a manual scroll gesture. `null` until
+ * the instance exists (not yet mounted, or `prefers-reduced-motion`, which
+ * never instantiates Lenis at all — see below).
+ */
+const LenisContext = createContext<Lenis | null>(null);
+
+export function useLenis(): Lenis | null {
+  return useContext(LenisContext);
+}
 
 /**
  * SmoothScrollProvider — wires Lenis smooth scrolling into GSAP's ScrollTrigger
@@ -19,18 +33,20 @@ import type { WithChildren } from "@/types";
  */
 export function SmoothScrollProvider({ children }: WithChildren) {
   const prefersReducedMotion = useReducedMotion();
+  const [lenis, setLenis] = useState<Lenis | null>(null);
 
   useEffect(() => {
     if (prefersReducedMotion) return;
 
-    const lenis = new Lenis({
+    const lenisInstance = new Lenis({
       autoRaf: false,
     });
+    setLenis(lenisInstance);
 
-    lenis.on("scroll", ScrollTrigger.update);
+    lenisInstance.on("scroll", ScrollTrigger.update);
 
     const syncLenisToGsapTicker = (time: number) => {
-      lenis.raf(time * 1000);
+      lenisInstance.raf(time * 1000);
     };
 
     gsap.ticker.add(syncLenisToGsapTicker);
@@ -48,7 +64,7 @@ export function SmoothScrollProvider({ children }: WithChildren) {
     // both once the window has fully loaded, plus a couple of deferred passes
     // to catch the slowest-settling content.
     const refresh = () => {
-      lenis.resize();
+      lenisInstance.resize();
       ScrollTrigger.refresh();
     };
     window.addEventListener("load", refresh);
@@ -57,12 +73,13 @@ export function SmoothScrollProvider({ children }: WithChildren) {
     );
 
     return () => {
-      lenis.destroy();
+      lenisInstance.destroy();
+      setLenis(null);
       gsap.ticker.remove(syncLenisToGsapTicker);
       window.removeEventListener("load", refresh);
       refreshTimeouts.forEach((id) => window.clearTimeout(id));
     };
   }, [prefersReducedMotion]);
 
-  return <>{children}</>;
+  return <LenisContext.Provider value={lenis}>{children}</LenisContext.Provider>;
 }

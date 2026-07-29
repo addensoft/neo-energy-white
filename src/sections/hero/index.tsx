@@ -4,7 +4,12 @@ import { useHeroPhase } from "@/components/providers/hero-phase-provider";
 import { Section } from "@/components/section";
 
 import { HeroCopy } from "./hero-copy";
+import { HeroIntro } from "./hero-intro";
+import { HeroPlayButton } from "./hero-play-button";
+import { HeroScrollHint } from "./hero-scroll-hint";
+import { HeroValueStatements } from "./hero-value-statements";
 import { ScrollCue } from "./scroll-cue";
+import { useHeroAutoplay } from "./use-hero-autoplay";
 import { useHeroScroll } from "./use-hero-scroll";
 
 /**
@@ -14,6 +19,14 @@ import { useHeroScroll } from "./use-hero-scroll";
  * back entirely under scroll control. See use-hero-scroll.ts for why this is
  * a canvas frame sequence rather than `<video>.currentTime` scrubbing, and
  * hero-frames.ts for the source specs.
+ *
+ * Final client-approved polish layers four premium touches on top of the
+ * unchanged scroll-scrub mechanism: a brief keynote-style title card on
+ * load (`HeroIntro`), a "scroll to discover" hint that teaches first-time
+ * visitors the film responds to scroll, a play/pause control that drives
+ * the same scroll range programmatically for visitors who'd rather watch
+ * than scroll, and a cycling highlight reel of engineering statements
+ * during the film's B-roll.
  */
 export function Hero() {
   const {
@@ -22,13 +35,26 @@ export function Hero() {
     sublineRef,
     signatureRef,
     scrimRef,
+    statementRefs,
+    sectionRef,
+    scrollTriggerRef,
+    hasStartedScrolling,
     loadProgress,
     ready,
   } = useHeroScroll();
   const { phase } = useHeroPhase();
+  const { isPlaying, togglePlay, controlVisible } = useHeroAutoplay({
+    ready,
+    sectionRef,
+    scrollTriggerRef,
+  });
 
   return (
-    <Section id="hero" className="bg-void min-h-[100dvh] lg:min-h-screen">
+    <Section
+      id="hero"
+      ref={sectionRef}
+      className="bg-void min-h-[100dvh] lg:min-h-screen"
+    >
       <canvas
         ref={canvasRef}
         aria-hidden="true"
@@ -46,12 +72,24 @@ export function Hero() {
         </div>
       )}
 
+      <HeroIntro ready={ready} />
+
+      <HeroValueStatements statementRefs={statementRefs} />
+
       <HeroCopy
         scrimRef={scrimRef}
         headlineRef={headlineRef}
         sublineRef={sublineRef}
         signatureRef={signatureRef}
       />
+
+      {/* `phase !== "settled"` also covers `prefers-reduced-motion`: that
+          path resolves straight to "settled" on mount (see use-hero-scroll.ts),
+          so the hint correctly never appears when there's nothing left to
+          scroll and discover. */}
+      <HeroScrollHint visible={ready && !hasStartedScrolling && phase !== "settled"} />
+
+      <HeroPlayButton visible={controlVisible} isPlaying={isPlaying} onToggle={togglePlay} />
 
       <ScrollCue visible={phase === "settled"} />
     </Section>

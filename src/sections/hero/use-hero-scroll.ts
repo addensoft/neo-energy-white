@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useHeroPhase } from "@/components/providers/hero-phase-provider";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
-import { HERO_FRAME_COUNT, HERO_TEXT_TIMING } from "./hero-frames";
+import { HERO_FRAME_COUNT, HERO_TEXT_TIMING, VALUE_STATEMENT_RANGE } from "./hero-frames";
 import { useImageSequence } from "./use-image-sequence";
 
 /** Scroll distance the sequence takes to scrub through, as a viewport-height multiple. */
@@ -14,6 +14,10 @@ const SCROLL_DISTANCE = "+=350%";
 
 /** Smoothing lag (seconds) so both frame playback and text reveal ease/catch-up to the scrollbar. */
 const SCRUB_SMOOTHING = 0.8;
+
+/** How many value statements cycle through (see hero-frames.ts for the copy
+ * and the shared timing window they cycle within). */
+const VALUE_STATEMENT_COUNT = 6;
 
 /**
  * useHeroScroll — Chapter 0, scroll-scrubbing the real Hero film.
@@ -27,9 +31,10 @@ const SCRUB_SMOOTHING = 0.8;
  * scrubbing, "won't advance until 100%," and release/re-engage at the
  * boundary natively.
  *
- * Frame index and text opacity are both driven off the SAME tweened proxy
- * value (0→1), so both inherit the same `scrub` smoothing lag — the film and
- * the headline feel like one continuous, eased scrub, not two separate systems.
+ * Frame index, text opacity, and the scrolling value statements are all
+ * driven off the SAME tweened proxy value (0→1), so everything inherits the
+ * same `scrub` smoothing lag — the film, the headline, and the highlight
+ * reel feel like one continuous, eased scrub, not separate systems.
  */
 export function useHeroScroll() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -37,11 +42,15 @@ export function useHeroScroll() {
   const sublineRef = useRef<HTMLDivElement>(null);
   const signatureRef = useRef<HTMLDivElement>(null);
   const scrimRef = useRef<HTMLDivElement>(null);
+  const statementRefs = useRef<HTMLDivElement[]>([]);
+  const sectionRef = useRef<HTMLElement>(null);
+  const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
 
   const canvasSizeRef = useRef({ width: 0, height: 0 });
   const currentFrameRef = useRef(0);
 
   const { setPhase } = useHeroPhase();
+  const [hasStartedScrolling, setHasStartedScrolling] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const { imagesRef, loadedCount, total, ready } = useImageSequence();
 
@@ -131,15 +140,18 @@ export function useHeroScroll() {
       signatureRef.current,
       scrimRef.current,
     ];
+    const statementEls = statementRefs.current;
 
     if (prefersReducedMotion) {
       drawFrame(HERO_FRAME_COUNT - 1);
       gsap.set(textEls, { autoAlpha: 1, filter: "blur(0px)" });
+      gsap.set(statementEls, { autoAlpha: 0 });
       setPhase("settled");
       return;
     }
 
     gsap.set(textEls, { autoAlpha: 0, filter: "blur(20px)" });
+    gsap.set(statementEls, { autoAlpha: 0, y: 14 });
     drawFrame(0);
 
     const ctx = gsap.context(() => {
@@ -155,9 +167,12 @@ export function useHeroScroll() {
           anticipatePin: 1,
           onUpdate: (self) => {
             setPhase(self.progress >= 0.995 ? "settled" : "film");
+            if (self.progress > 0.001) setHasStartedScrolling(true);
           },
         },
       });
+
+      scrollTriggerRef.current = tl.scrollTrigger ?? null;
 
       tl.to(
         frameProxy,
@@ -169,6 +184,32 @@ export function useHeroScroll() {
         },
         0,
       );
+
+      // Scrolling value statements — one visible at a time, each in its own
+      // evenly-spaced slot across VALUE_STATEMENT_RANGE, well before the
+      // headline reveal begins (HERO_TEXT_TIMING.scrimStart) so the two
+      // never overlap. Fade+translate in, hold, fade+translate out, with a
+      // clean gap before the next one starts (a hard cut, not a crossfade —
+      // "only one at a time").
+      const { start: rangeStart, end: rangeEnd } = VALUE_STATEMENT_RANGE;
+      const slotWidth = (rangeEnd - rangeStart) / VALUE_STATEMENT_COUNT;
+      statementEls.forEach((el, index) => {
+        const slotStart = rangeStart + index * slotWidth;
+        const fadeInDuration = slotWidth * 0.12;
+        const fadeOutStart = slotStart + slotWidth * 0.7;
+        const fadeOutDuration = slotWidth * 0.2;
+
+        tl.to(
+          el,
+          { autoAlpha: 1, y: 0, duration: fadeInDuration, ease: "power2.out" },
+          slotStart,
+        );
+        tl.to(
+          el,
+          { autoAlpha: 0, y: -14, duration: fadeOutDuration, ease: "power2.in" },
+          fadeOutStart,
+        );
+      });
 
       tl.to(
         scrimRef.current,
@@ -224,6 +265,10 @@ export function useHeroScroll() {
     sublineRef,
     signatureRef,
     scrimRef,
+    statementRefs,
+    sectionRef,
+    scrollTriggerRef,
+    hasStartedScrolling,
     loadProgress: total > 0 ? loadedCount / total : 0,
     ready,
   };

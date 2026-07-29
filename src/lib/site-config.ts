@@ -44,6 +44,7 @@ export const primaryNav: readonly NavLink[] = [
       { label: "About Us", href: "#" },
       { label: "Our Mission", href: "#" },
       { label: "Our Team", href: "#" },
+      { label: "Our Principles", href: "#" },
       { label: "News", href: "#" },
     ],
   },
