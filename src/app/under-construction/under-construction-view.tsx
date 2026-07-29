@@ -1,217 +1,240 @@
 "use client";
 
+import {
+  BatteryCharging,
+  Leaf,
+  Mail,
+  MapPin,
+  Phone,
+  ShieldCheck,
+  Wrench,
+} from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
-import { Button, Heading, Paragraph } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { gsap } from "@/lib/gsap";
 import { EASE_ENGINEERED_CSS } from "@/lib/motion-tokens";
 import { siteConfig } from "@/lib/site-config";
 
-const PARTICLE_COUNT = 5;
+/** WhatsApp contact — digits only for the wa.me deep link, plus the
+ * human-readable form shown in the footer bar. */
+const WHATSAPP_NUMBER = "6580712233";
+const WHATSAPP_DISPLAY = "+65 8071 2233";
+
+const FEATURES = [
+  { icon: BatteryCharging, label: ["Innovative", "Technology"] },
+  { icon: ShieldCheck, label: ["Premium", "Quality"] },
+  { icon: Wrench, label: ["Expert", "Service"] },
+  { icon: Leaf, label: ["Sustainable", "Future"] },
+] as const;
 
 /**
- * UnderConstructionView — the animated body of `/under-construction`.
+ * UnderConstructionView — the approved standalone placeholder, built to the
+ * client's supplied design: the NEO ENERGY battery/robot render as a
+ * full-bleed background, centred brand lockup and UNDER/CONSTRUCTION
+ * headline over its light upper sky, a four-item capability strip, a
+ * closing line + CTA sitting over the floor, and a dark contact bar.
  *
- * Deliberately self-contained: it borrows only the site's shared design
- * primitives (Button/Heading/Paragraph, the colour + spacing tokens, the
- * `ease-engineered` curve) and none of the homepage's section components or
- * layouts, so this placeholder can be pointed at any not-yet-built route
- * without coupling it to homepage internals.
- *
- * Motion mirrors the restraint used across the rest of the site: one
- * entrance timeline, then a slow float on the artwork, a low-intensity
- * breathing glow behind it, and a few near-invisible drifting particles for
- * depth. All of it is skipped outright under `prefers-reduced-motion`, which
- * settles everything into its final resting state instead.
+ * Self-contained by design — it uses the brand's colour/spacing tokens and
+ * `ease-engineered` curve but none of the homepage's section components, so
+ * it can front any not-yet-built route without coupling to them. Motion is
+ * a single restrained fade-up on load, skipped entirely under
+ * `prefers-reduced-motion`.
  */
 export function UnderConstructionView() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const artworkRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const particleRefs = useRef<HTMLDivElement[]>([]);
+  const revealRefs = useRef<HTMLDivElement[]>([]);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
 
-    const animatedEls = [artworkRef.current, contentRef.current];
+    const els = revealRefs.current.filter(Boolean);
 
     if (prefersReducedMotion) {
-      gsap.set(animatedEls, { opacity: 1, y: 0, scale: 1 });
-      gsap.set(glowRef.current, { opacity: 0.5 });
+      gsap.set(els, { opacity: 1, y: 0 });
       return;
     }
 
-    const idleTweens: gsap.core.Tween[] = [];
-
     const ctx = gsap.context(() => {
-      gsap.set(artworkRef.current, { opacity: 0, y: 24, scale: 0.96 });
-      gsap.set(contentRef.current, { opacity: 0, y: 20 });
-      gsap.set(glowRef.current, { opacity: 0 });
-
-      const tl = gsap.timeline({
-        defaults: { ease: EASE_ENGINEERED_CSS },
-        onComplete: () => {
-          // Gentle perpetual float — ~10px of travel over a slow cycle.
-          idleTweens.push(
-            gsap.to(artworkRef.current, {
-              y: "+=10",
-              duration: 4.5,
-              repeat: -1,
-              yoyo: true,
-              ease: "sine.inOut",
-            }),
-          );
-
-          // Breathing glow, kept low-intensity so it reads as ambient depth.
-          idleTweens.push(
-            gsap.to(glowRef.current, {
-              opacity: 0.75,
-              duration: 5,
-              repeat: -1,
-              yoyo: true,
-              ease: "sine.inOut",
-            }),
-          );
-
-          // Faint drifting particles.
-          particleRefs.current.forEach((particle, index) => {
-            idleTweens.push(
-              gsap.to(particle, {
-                x: index % 2 === 0 ? 14 : -14,
-                y: -18,
-                opacity: 0.55,
-                duration: 13 + index * 2.5,
-                repeat: -1,
-                yoyo: true,
-                ease: "sine.inOut",
-              }),
-            );
-          });
-        },
+      gsap.set(els, { opacity: 0, y: 22 });
+      gsap.to(els, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        stagger: 0.14,
+        ease: EASE_ENGINEERED_CSS,
       });
-
-      tl.to(glowRef.current, { opacity: 0.45, duration: 1.4 }, 0)
-        .to(artworkRef.current, { opacity: 1, y: 0, scale: 1, duration: 1.2 }, 0.1)
-        .to(contentRef.current, { opacity: 1, y: 0, duration: 1 }, 0.5);
     }, root);
 
-    return () => {
-      idleTweens.forEach((tween) => tween.kill());
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, [prefersReducedMotion]);
 
+  const setRevealRef = (index: number) => (el: HTMLDivElement | null) => {
+    if (el) revealRefs.current[index] = el;
+  };
+
   return (
-    <div
-      ref={rootRef}
-      className="bg-background relative flex min-h-[100dvh] w-full flex-col items-center justify-center overflow-hidden px-6 py-20 lg:px-16"
-    >
-      {/* Engineering grid texture — very low opacity, masked to fade out at
-          the edges so it reads as paper texture rather than a visible grid. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.55]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, rgba(10,14,20,0.045) 1px, transparent 1px), linear-gradient(to bottom, rgba(10,14,20,0.045) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          maskImage:
-            "radial-gradient(ellipse 70% 60% at 50% 45%, black 20%, transparent 85%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 70% 60% at 50% 45%, black 20%, transparent 85%)",
-        }}
-      />
+    <div ref={rootRef} className="flex min-h-[100dvh] flex-col">
+      {/* ---------- Main stage: content over the full-bleed artwork ---------- */}
+      <div className="bg-background relative flex flex-1 flex-col overflow-hidden">
+        {/* The artwork is anchored to the lower portion of the stage rather
+            than full-bleed — matching the approved design, where the brand
+            lockup, headline and capability strip sit on clean white space
+            and the render begins beneath them. Full-bleed put the battery
+            directly behind the capability strip. */}
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-between gap-8 px-6 py-10 text-center lg:gap-10 lg:px-10 lg:py-14">
+          {/* Top: logo → headline → rule → intro → capability strip.
+              `relative z-10` keeps it above the render, which becomes an
+              absolutely-positioned sibling at `lg`. */}
+          <div className="relative z-10 flex w-full flex-col items-center gap-6 lg:gap-7">
+            <div ref={setRevealRef(0)}>
+              <Image
+                src="/images/footer-logo.webp"
+                alt={siteConfig.name}
+                width={1597}
+                height={828}
+                priority
+                className="h-16 w-auto lg:h-20"
+              />
+            </div>
 
-      <div className="relative flex w-full max-w-2xl flex-col items-center gap-10 text-center">
-        {/* Artwork + its ambient glow */}
-        <div className="relative flex w-full justify-center">
-          <div
-            ref={glowRef}
-            aria-hidden="true"
-            className="bg-ion/25 pointer-events-none absolute top-1/2 left-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 blur-[100px] lg:h-80 lg:w-80"
-          />
+            <div ref={setRevealRef(1)} className="flex flex-col items-center">
+              <h1 className="font-display text-foreground text-[clamp(2.2rem,8.5vw,4.75rem)] leading-[1.04] font-bold tracking-[0.14em] uppercase">
+                Under
+              </h1>
+              <span className="font-display text-ion text-[clamp(2.2rem,8.5vw,4.75rem)] leading-[1.04] font-bold tracking-[0.03em] uppercase">
+                Construction
+              </span>
+            </div>
 
-          {Array.from({ length: PARTICLE_COUNT }).map((_, index) => (
+            {/* Hairline rule with the brand's blue accent at its centre */}
+            <div ref={setRevealRef(2)} className="flex items-center gap-2">
+              <span className="via-foreground/25 h-px w-16 bg-gradient-to-r from-transparent to-transparent" />
+              <span className="bg-ion h-1 w-1 rotate-45" />
+              <span className="via-foreground/25 h-px w-16 bg-gradient-to-r from-transparent to-transparent" />
+            </div>
+
+            <div ref={setRevealRef(3)}>
+              <p className="font-body text-foreground/80 text-[0.95rem] leading-relaxed text-balance lg:text-lg">
+                We&apos;re building something exceptional.
+                <br />
+                Our site is under construction.
+              </p>
+            </div>
+
+            {/* Capability strip — hairline dividers between items on the
+                wider layouts, a plain 2-up grid on small screens. */}
             <div
-              key={index}
-              ref={(el) => {
-                if (el) particleRefs.current[index] = el;
-              }}
-              aria-hidden="true"
-              className="bg-ion/40 pointer-events-none absolute h-1 w-1 rounded-full blur-[0.5px]"
-              style={{
-                top: `${18 + index * 16}%`,
-                left: `${20 + index * 15}%`,
-              }}
-            />
-          ))}
+              ref={setRevealRef(4)}
+              className="grid w-full max-w-2xl grid-cols-2 gap-y-7 sm:grid-cols-4 sm:gap-y-0"
+            >
+              {FEATURES.map((feature, index) => (
+                <div
+                  key={feature.label.join(" ")}
+                  className={
+                    index > 0
+                      ? "sm:border-foreground/15 flex flex-col items-center gap-2.5 sm:border-l"
+                      : "flex flex-col items-center gap-2.5"
+                  }
+                >
+                  <feature.icon className="text-ion h-7 w-7" strokeWidth={1.5} />
+                  <span className="font-body text-foreground/85 text-[0.68rem] leading-[1.5] tracking-[0.1em] uppercase lg:text-[0.72rem]">
+                    {feature.label[0]}
+                    <br />
+                    {feature.label[1]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
 
+          {/* The render. Two different jobs by breakpoint, one element:
+              - mobile: an in-flow band between the strip above and the copy
+                below. Absolutely positioning it here (as desktop does) put
+                the battery straight through the labels on a narrow, tall
+                viewport.
+              - lg and up: lifted out of flow into the stage's lower 72% so
+                the closing line and CTA sit over the render's floor, as the
+                approved design shows. */}
           <div
-            ref={artworkRef}
-            className="relative aspect-[3/2] w-full max-w-md opacity-0"
+            aria-hidden="true"
+            className="pointer-events-none relative -mx-6 h-56 w-[calc(100%+3rem)] shrink-0 sm:h-72 lg:absolute lg:inset-x-0 lg:bottom-0 lg:z-0 lg:mx-0 lg:h-[72%] lg:w-full"
           >
-            {/* The source artwork places the chip in its right-hand third (it
-                was authored as a wide banner with left-side negative space),
-                so cropping to the far right pulls the chip as close to this
-                frame's own centre as `object-position` allows. */}
             <Image
-              src="/images/why-choose-engineering.webp"
-              alt="NEO ENERGY battery chip on an engineering circuit board"
+              src="/images/construction-page-artwork.webp"
+              alt=""
               fill
-              sizes="(min-width: 1024px) 28rem, 90vw"
-              className="object-cover object-[100%_50%]"
+              sizes="100vw"
+              className="object-cover object-center"
               priority
             />
-          </div>
-        </div>
-
-        {/* Copy + actions */}
-        <div ref={contentRef} className="flex flex-col items-center gap-6 opacity-0">
-          <span className="text-ion font-mono text-[0.75rem] font-semibold tracking-[0.28em] uppercase">
-            Coming Soon
-          </span>
-
-          <Heading as="h1" size="h2" className="max-w-xl">
-            This Page Is Under Construction
-          </Heading>
-
-          <Paragraph size="body" className="max-w-xl text-balance">
-            We&apos;re building something exceptional. Our engineering team is
-            preparing this experience with the same precision and quality that
-            defines NEO ENERGY&apos;s advanced EV battery solutions. Please check back
-            soon.
-          </Paragraph>
-
-          <div className="mt-2 flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:gap-4">
-            <Button href="/" variant="primary" className="w-full sm:w-auto">
-              Return to Homepage
-            </Button>
-            <Button
-              href={`mailto:${siteConfig.contactEmail}`}
-              variant="ghost"
-              className="w-full sm:w-auto"
-            >
-              Contact Us
-            </Button>
+            {/* Dissolves the render's own top edge into the white page so
+                there's no visible seam where it starts. */}
+            <div
+              className="absolute inset-x-0 top-0 h-2/5"
+              style={{
+                background:
+                  "linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 35%, rgba(255,255,255,0.35) 70%, transparent 100%)",
+              }}
+            />
           </div>
 
-          {/* Status indicator */}
-          <div className="border-border mt-4 flex items-center gap-2.5 rounded-full border px-4 py-2">
-            <span className="relative flex h-2 w-2" aria-hidden="true">
-              <span className="bg-ion absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
-              <span className="bg-ion relative inline-flex h-2 w-2 rounded-full" />
-            </span>
-            <span className="text-muted font-mono text-[0.7rem] tracking-[0.16em] uppercase">
-              Development In Progress
-            </span>
+          {/* Bottom: closing line + CTA, sitting over the artwork's floor */}
+          <div ref={setRevealRef(5)} className="relative z-10 flex flex-col items-center gap-6">
+            <p className="font-body text-foreground/80 max-w-md text-[0.95rem] leading-relaxed text-balance lg:text-base">
+              We&apos;re working hard to bring you the best experience in EV battery
+              solutions.
+            </p>
+
+            <Button href={`mailto:${siteConfig.contactEmail}`} variant="primary">
+              Get In Touch
+            </Button>
           </div>
         </div>
       </div>
+
+      {/* ---------- Contact bar ---------- */}
+      <footer className="bg-foreground text-background">
+        <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-5 px-6 py-6 lg:px-10">
+          <div className="flex w-full flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:gap-6">
+            <span className="flex items-center gap-2.5 text-[0.8rem]">
+              <MapPin className="text-ion h-4 w-4 shrink-0" strokeWidth={1.5} />
+              Singapore · Worldwide Service
+            </span>
+
+            {/* Design shows a handset here; the number is the client's
+                WhatsApp line, so it deep-links to wa.me. */}
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Message NEO ENERGY on WhatsApp at ${WHATSAPP_DISPLAY}`}
+              className="hover:text-ion ease-engineered focus-visible:outline-ion flex items-center gap-2.5 text-[0.8rem] transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              <Phone className="text-ion h-4 w-4 shrink-0" strokeWidth={1.5} />
+              {WHATSAPP_DISPLAY}
+            </a>
+
+            <a
+              href={`mailto:${siteConfig.contactEmail}`}
+              className="hover:text-ion ease-engineered focus-visible:outline-ion flex items-center gap-2.5 text-[0.8rem] transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              <Mail className="text-ion h-4 w-4 shrink-0" strokeWidth={1.5} />
+              {siteConfig.contactEmail}
+            </a>
+          </div>
+
+          <div className="bg-background/15 h-px w-full" />
+
+          <span className="text-background/60 text-center text-[0.75rem]">
+            © {new Date().getFullYear()} {siteConfig.legalName} All Rights Reserved.
+          </span>
+        </div>
+      </footer>
     </div>
   );
 }
