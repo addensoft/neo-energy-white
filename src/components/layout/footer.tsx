@@ -21,7 +21,8 @@ import { LinkedinIcon } from "./social-icons";
  * `MobileFooter`), not one responsively scaled down to the other, per the
  * brief. Most link destinations are pages this one-page site doesn't have
  * yet — per the project's "never fabricate fake destinations" discipline,
- * only labels that map to a real homepage section get a real anchor;
+ * only labels that map to a real homepage section, or a real route (Privacy
+ * Policy, Terms of Use, the generated `/sitemap.xml`), get a real href;
  * everything else is `href="#"` until those pages exist. Phone number is a
  * placeholder for the same reason `siteConfig.contactEmail` is — no real one
  * confirmed yet.
@@ -60,9 +61,9 @@ const FOOTER_LINK_GROUPS: { title: string; links: { label: string; href: string 
 ];
 
 const LEGAL_LINKS = [
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms of Use", href: "#" },
-  { label: "Sitemap", href: "#" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Use", href: "/terms" },
+  { label: "Sitemap", href: "/sitemap.xml" },
 ];
 
 /** Mobile-only 4th accordion group — the approved desktop grid has exactly
