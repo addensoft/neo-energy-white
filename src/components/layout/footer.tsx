@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Leaf, Mail, MapPin, Phone } from "lucide-react";
+import { ChevronDown, Leaf, Mail, MapPin } from "lucide-react";
 import Image from "next/image";
 import { useState, type ReactNode } from "react";
 
@@ -10,7 +10,7 @@ import { DURATION } from "@/lib/motion-tokens";
 import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 
-import { LinkedinIcon } from "./social-icons";
+import { LinkedinIcon, WhatsAppIcon } from "./social-icons";
 
 /**
  * Footer — approved client redesign (final direction). The Earth CTA
@@ -19,33 +19,34 @@ import { LinkedinIcon } from "./social-icons";
  *
  * Desktop and mobile are genuinely separate layouts below (`DesktopFooter` /
  * `MobileFooter`), not one responsively scaled down to the other, per the
- * brief. Most link destinations are pages this one-page site doesn't have
- * yet — per the project's "never fabricate fake destinations" discipline,
- * only labels that map to a real homepage section, or a real route (Privacy
- * Policy, Terms of Use, the generated `/sitemap.xml`), get a real href;
- * everything else is `href="#"` until those pages exist. Phone number is a
- * placeholder for the same reason `siteConfig.contactEmail` is — no real one
- * confirmed yet.
+ * brief. Every label below now resolves to a real destination — a real
+ * route, or a real anchor on `/` (`/#authority`) or `/about`
+ * (`/about#partners`) — EXCEPT the ones this project genuinely has no
+ * content for yet: the Industries group, "Thermal Management", "FAQs",
+ * "Documentation", and LinkedIn's URL. Those stay `href="#"` per this
+ * project's "never fabricate fake destinations" discipline (see how
+ * "Upgrades" was dropped from the primary nav entirely for the same reason)
+ * until there's a real page/profile to point at.
  */
 const FOOTER_LINK_GROUPS: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: "Company",
     links: [
       { label: "About Us", href: "/about" },
-      { label: "Careers", href: "#" },
-      { label: "News & Updates", href: "#" },
-      { label: "Certifications", href: "#" },
-      { label: "Partners", href: "#" },
+      { label: "Careers", href: "/career" },
+      { label: "News & Updates", href: "/news" },
+      { label: "Certifications", href: "/principles" },
+      { label: "Partners", href: "/about#partners" },
     ],
   },
   {
     title: "Solutions",
     links: [
-      { label: "Battery Systems", href: "#flagship-battery" },
-      { label: "Diagnostics & Testing", href: "#repair" },
-      { label: "Component Repair", href: "#repair" },
-      { label: "Lifecycle Support", href: "#repair" },
-      { label: "Thermal Management", href: "#repair" },
+      { label: "Battery Systems", href: "/services/battery-systems" },
+      { label: "Diagnostics & Testing", href: "/services/diagnostics" },
+      { label: "Component Repair", href: "/services/component-repair" },
+      { label: "Lifecycle Support", href: "/services/maintenance" },
+      { label: "Thermal Management", href: "#" },
     ],
   },
   {
@@ -74,7 +75,7 @@ const LEGAL_LINKS = [
 const MOBILE_SUPPORT_GROUP = {
   title: "Support",
   links: [
-    { label: "Service Network", href: "#authority" },
+    { label: "Service Network", href: "/#authority" },
     { label: "FAQs", href: "#" },
     { label: "Documentation", href: "#" },
   ],
@@ -85,11 +86,23 @@ const MOBILE_ACCORDION_GROUPS = [...FOOTER_LINK_GROUPS, MOBILE_SUPPORT_GROUP];
 const COLUMN_TITLE_CLASS =
   "font-mono text-[0.8rem] font-semibold tracking-[0.14em] text-foreground uppercase";
 
-/** Sitemap-style link — soft colour shift plus a left-to-right underline draw on hover. */
-function FooterLink({ href, children }: { href: string; children: ReactNode }) {
+/** Sitemap-style link — soft colour shift plus a left-to-right underline draw on hover.
+ * `external` opens in a new tab (with `rel="noopener noreferrer"`) — for links like
+ * WhatsApp that take the visitor off-site entirely, rather than losing their place
+ * on the page they were just reading. */
+function FooterLink({
+  href,
+  external,
+  children,
+}: {
+  href: string;
+  external?: boolean;
+  children: ReactNode;
+}) {
   return (
     <a
       href={href}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       className="group ease-engineered text-body focus-visible:outline-ion relative inline-block w-fit py-0.5 transition-colors duration-300 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2"
     >
       {children}
@@ -138,10 +151,17 @@ function SocialLink({
   );
 }
 
-/** LinkedIn / Email / Phone — replaces the old Instagram/Facebook set per the
- * approved design; Email and Phone reuse the site's real contact details
- * rather than pointing at placeholder social profiles. */
+/** LinkedIn / Email / WhatsApp — replaces the old Instagram/Facebook set per
+ * the approved design. Email and WhatsApp reuse the site's real, confirmed
+ * contact details; the third slot used to be a "Phone" icon pointing at
+ * `tel:+65` — a dead link, since no real phone number has ever been
+ * confirmed (see `contact-info.tsx`, which treats that same placeholder as
+ * unclickable for the same reason). WhatsApp is what that row actually links
+ * to everywhere else on the site (`siteConfig.whatsappNumber`), so it
+ * replaces Phone here rather than sitting next to a fake number. */
 function SocialLinks() {
+  const whatsappHref = `https://wa.me/${siteConfig.whatsappNumber}`;
+
   return (
     <div className="flex items-center gap-3">
       <SocialLink href="#" label="LinkedIn">
@@ -150,9 +170,15 @@ function SocialLinks() {
       <SocialLink href={`mailto:${siteConfig.contactEmail}`} label="Email">
         <Mail className="h-4 w-4" strokeWidth={1.5} />
       </SocialLink>
-      <SocialLink href="tel:+65" label="Phone">
-        <Phone className="h-4 w-4" strokeWidth={1.5} />
-      </SocialLink>
+      <a
+        href={whatsappHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="WhatsApp"
+        className="border-border text-muted ease-engineered hover:border-ion/60 hover:text-ion focus-visible:outline-ion flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-300 hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 lg:h-9 lg:w-9"
+      >
+        <WhatsAppIcon className="h-4 w-4" />
+      </a>
     </div>
   );
 }
@@ -193,8 +219,10 @@ function ContactDetails({ large = false }: { large?: boolean }) {
           <span className="text-body">Singapore</span>
         </li>
         <li className="flex items-center gap-2.5">
-          <Phone className="text-ion h-4 w-4 shrink-0" strokeWidth={1.5} />
-          <FooterLink href="tel:+65">+65 XXXX XXXX</FooterLink>
+          <WhatsAppIcon className="text-ion h-4 w-4 shrink-0" />
+          <FooterLink href={`https://wa.me/${siteConfig.whatsappNumber}`} external>
+            {siteConfig.whatsappDisplay}
+          </FooterLink>
         </li>
         <li className="flex items-center gap-2.5">
           <Mail className="text-ion h-4 w-4 shrink-0" strokeWidth={1.5} />

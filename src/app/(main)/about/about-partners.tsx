@@ -34,7 +34,7 @@ const PARTNERS = [
 
 export function AboutPartners() {
   return (
-    <section className="bg-void relative py-16 lg:py-24">
+    <section id="partners" className="bg-void relative py-16 lg:py-24">
       <Container className="relative z-10 flex flex-col items-center gap-10 text-center">
         <div className="flex flex-col items-center gap-3">
           <RevealWrapper variant="fade">
