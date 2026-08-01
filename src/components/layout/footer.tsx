@@ -21,12 +21,11 @@ import { LinkedinIcon, WhatsAppIcon } from "./social-icons";
  * `MobileFooter`), not one responsively scaled down to the other, per the
  * brief. Every label below now resolves to a real destination — a real
  * route, or a real anchor on `/` (`/#authority`) or `/about`
- * (`/about#partners`) — EXCEPT the ones this project genuinely has no
- * content for yet: the Industries group, "Thermal Management", "FAQs",
- * "Documentation", and LinkedIn's URL. Those stay `href="#"` per this
- * project's "never fabricate fake destinations" discipline (see how
- * "Upgrades" was dropped from the primary nav entirely for the same reason)
- * until there's a real page/profile to point at.
+ * (`/about#partners`) — EXCEPT "FAQs", "Documentation", and LinkedIn's URL,
+ * which this project genuinely has no content/profile for yet. Those stay
+ * `href="#"` per this project's "never fabricate fake destinations"
+ * discipline (see how "Upgrades" was dropped from the primary nav entirely
+ * for the same reason) until there's something real to point at.
  */
 const FOOTER_LINK_GROUPS: { title: string; links: { label: string; href: string }[] }[] = [
   {
@@ -46,17 +45,7 @@ const FOOTER_LINK_GROUPS: { title: string; links: { label: string; href: string 
       { label: "Diagnostics & Testing", href: "/services/diagnostics" },
       { label: "Component Repair", href: "/services/component-repair" },
       { label: "Lifecycle Support", href: "/services/maintenance" },
-      { label: "Thermal Management", href: "#" },
-    ],
-  },
-  {
-    title: "Industries",
-    links: [
-      { label: "Fleet Operators", href: "#" },
-      { label: "Dealerships", href: "#" },
-      { label: "Manufacturers", href: "#" },
-      { label: "Energy Storage", href: "#" },
-      { label: "Industrial", href: "#" },
+      { label: "Thermal Management", href: "/services/maintenance" },
     ],
   },
 ];
@@ -67,11 +56,13 @@ const LEGAL_LINKS = [
   { label: "Sitemap", href: "/sitemap.xml" },
 ];
 
-/** Mobile-only 4th accordion group — the approved desktop grid has exactly
- * four groups (Company/Solutions/Industries/Contact), but the approved
- * mobile reference explicitly lists a "Support" accordion between Industries
- * and Contact. Reuses the old footer's Support links (minus "Contact Us",
- * which would just duplicate the Contact accordion immediately after it). */
+/** Mobile-only extra accordion group, appended after Company/Solutions and
+ * before Contact. Reuses the old footer's Support links (minus "Contact Us",
+ * which would just duplicate the Contact accordion immediately after it).
+ * (The original approved design also had an "Industries" group between
+ * Solutions and Support — dropped per direct instruction, since 3 of its 5
+ * links didn't correspond to anything NEO Energy actually does and had no
+ * real content anywhere in this project.) */
 const MOBILE_SUPPORT_GROUP = {
   title: "Support",
   links: [
@@ -243,13 +234,15 @@ function ContactDetails({ large = false }: { large?: boolean }) {
   );
 }
 
-/** Desktop — five-column grid (brand, three link groups, contact), no
- * dividers, generous whitespace. "Modern Apple/CATL style" per the brief. */
+/** Desktop — four-column grid (brand, two link groups, contact), no
+ * dividers, generous whitespace. "Modern Apple/CATL style" per the brief.
+ * (Was five columns/three link groups until the "Industries" group was
+ * dropped — see `MOBILE_SUPPORT_GROUP`'s comment for why.) */
 function DesktopFooter({ year }: { year: number }) {
   return (
     <div className="hidden lg:block">
       <Container className="flex flex-col gap-12 py-section-sm">
-        <div className="grid grid-cols-[1.4fr_1fr_1fr_1fr_1.3fr] gap-x-10">
+        <div className="grid grid-cols-[1.6fr_1fr_1fr_1.3fr] gap-x-10">
           <BrandBlock />
 
           {FOOTER_LINK_GROUPS.map((group) => (
