@@ -40,6 +40,15 @@ export function useHeroVideo(videoRef: RefObject<HTMLVideoElement | null>) {
     video.addEventListener("play", onPlay);
     video.addEventListener("pause", onPause);
 
+    // The element's `autoPlay` attribute (see index.tsx) can already have
+    // started playback before this effect runs — the browser acts on it the
+    // moment the video commits to the DOM, which happens before effects
+    // fire, so the native "play" event this hook wants to hear can already
+    // have come and gone with no listener attached yet to catch it. Sync
+    // state from the element's real, current status now, rather than
+    // trusting only events that may have already fired.
+    setIsPlaying(!video.paused);
+
     if (prefersReducedMotion) {
       video.pause();
     } else {

@@ -131,6 +131,32 @@
 }
 
 /**
+ * component-rain — the falling blue-streak ambient loop behind the
+ * Component Repair service page's explainer image
+ * (`services/component-repair/component-rain.tsx`). A plain CSS animation
+ * rather than JS-driven (GSAP/Framer): it's an infinite ambient effect with
+ * no start/end state either library's reveal or timeline machinery is
+ * built for, just per-streak `animation-delay`/`animation-duration` set
+ * inline by that component for an organic, non-synchronised fall.
+ */
+@keyframes component-rain {
+  0% {
+    transform: translateY(-40%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(220%);
+    opacity: 0;
+  }
+}
+
+/**
  * Global typography system — one scale, applied everywhere. Mobile-first
  * values below, overridden at `md` (tablet, 768px) and `lg` (desktop,
  * 1024px) to match Tailwind's own breakpoints so these compose predictably

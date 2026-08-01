@@ -37,16 +37,23 @@ export type NavLink = {
  * single homepage).
  *
  * "Home", "Contact Us", "About Us", "App", "Career", "Promo", "News", "Our
- * Team", and "Our Principles" are real routes, not homepage-only anchors —
- * the site now has `/contact`, `/about`, `/app`, `/career`, `/promo`,
- * `/news`, `/team`, and `/principles` pages, so all nine must resolve
- * correctly from anywhere, not just while already on `/`. "Our Mission" is
- * still a real section on `/about` (see
- * `app/(main)/about/about-mission.tsx`) so it links straight to that
- * anchor. `/team`'s roster is placeholder data pending the client's real
- * one — see `app/(main)/team/team-grid.tsx`; `/principles` is a denser,
- * dedicated presentation of facts already established across About/Repair/
- * Trust Bar — see `app/(main)/principles/page.tsx`.
+ * Team", "Our Principles", "Battery Systems", "Component Repair",
+ * "Maintenance", and "Diagnostics" are real routes, not homepage-only
+ * anchors — the site now has `/contact`, `/about`, `/app`, `/career`,
+ * `/promo`, `/news`, `/team`, `/principles`, `/services/battery-systems`,
+ * `/services/component-repair`, `/services/maintenance`, and
+ * `/services/diagnostics` pages, so all thirteen must resolve correctly
+ * from anywhere, not just while already on `/`. "Our Mission" is still a
+ * real section on `/about` (see `app/(main)/about/about-mission.tsx`) so it
+ * links straight to that anchor. `/team`'s roster is placeholder data
+ * pending the client's real one — see `app/(main)/team/team-grid.tsx`;
+ * `/principles` is a denser, dedicated presentation of facts already
+ * established across About/Repair/Trust Bar — see
+ * `app/(main)/principles/page.tsx`. "Upgrades" was dropped from this menu
+ * per direct instruction — it never had a real destination or confirmed
+ * content (unlike its four siblings above, it's undescribed anywhere in
+ * this project: no client brief mention, no Creative Direction copy, no
+ * capability card).
  */
 export const primaryNav: readonly NavLink[] = [
   { label: "Home", href: "/" },
@@ -65,11 +72,10 @@ export const primaryNav: readonly NavLink[] = [
     label: "Services",
     href: "#",
     children: [
-      { label: "Battery Systems", href: "#flagship-battery" },
-      { label: "Component Repair", href: "#repair" },
-      { label: "Maintenance", href: "#repair" },
-      { label: "Diagnostics", href: "#repair" },
-      { label: "Upgrades", href: "#" },
+      { label: "Battery Systems", href: "/services/battery-systems" },
+      { label: "Component Repair", href: "/services/component-repair" },
+      { label: "Maintenance", href: "/services/maintenance" },
+      { label: "Diagnostics", href: "/services/diagnostics" },
     ],
   },
   { label: "Career", href: "/career" },
