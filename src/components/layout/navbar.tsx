@@ -165,7 +165,12 @@ function MobileNav({ open, onNavigate }: { open: boolean; onNavigate: () => void
               </li>
             ))}
             <li className="pt-2 sm:hidden">
-              <Button href="#cta" variant="primary" size="sm" className="w-full">
+              {/* "/#cta" (not "#cta"): this bar renders on every page, not
+                  just the homepage, and the CTA banner it targets only
+                  exists there. A path-qualified hash still resolves as a
+                  same-document jump when already on "/", and correctly
+                  navigates there first from anywhere else. */}
+              <Button href="/#cta" variant="primary" size="sm" className="w-full">
                 Request Assessment
               </Button>
             </li>
@@ -248,7 +253,7 @@ export function Navbar() {
         )}
       >
         <motion.a
-          href="#hero"
+          href="/"
           aria-label={siteConfig.name}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -289,7 +294,7 @@ export function Navbar() {
         </ul>
 
         <div className="flex items-center gap-3 justify-self-end">
-          <Button href="#cta" variant="primary" size="sm" className="hidden sm:inline-flex">
+          <Button href="/#cta" variant="primary" size="sm" className="hidden sm:inline-flex">
             Request Assessment
           </Button>
           <button

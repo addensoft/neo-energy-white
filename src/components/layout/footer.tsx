@@ -30,7 +30,7 @@ const FOOTER_LINK_GROUPS: { title: string; links: { label: string; href: string 
   {
     title: "Company",
     links: [
-      { label: "About Us", href: "#" },
+      { label: "About Us", href: "/about" },
       { label: "Careers", href: "#" },
       { label: "News & Updates", href: "#" },
       { label: "Certifications", href: "#" },

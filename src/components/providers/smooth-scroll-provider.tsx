@@ -9,11 +9,16 @@ import type { WithChildren } from "@/types";
 
 /**
  * LenisContext — exposes the live Lenis instance (once instantiated) so a
- * few chapters can drive scroll programmatically — currently just Hero's
- * play/pause control, which calls `lenis.scrollTo()` to auto-advance through
- * the pinned film instead of requiring a manual scroll gesture. `null` until
- * the instance exists (not yet mounted, or `prefers-reduced-motion`, which
- * never instantiates Lenis at all — see below).
+ * chapter can drive scroll programmatically via `lenis.scrollTo()`. Nothing
+ * consumes it at the moment: its one caller was Hero's play/pause control,
+ * back when "play" meant auto-scrolling through the pinned, scroll-scrubbed
+ * film; Hero now plays a real looping `<video>` and pauses the element
+ * itself. Kept because it's the correct way to script scroll on this page —
+ * bypassing Lenis with `window.scrollTo` desyncs it and leaves ScrollTrigger
+ * unaware, so section reveals never fire.
+ *
+ * `null` until the instance exists (not yet mounted, or
+ * `prefers-reduced-motion`, which never instantiates Lenis at all).
  */
 const LenisContext = createContext<Lenis | null>(null);
 
@@ -54,7 +59,7 @@ export function SmoothScrollProvider({ children }: WithChildren) {
 
     // Both Lenis and every section's ScrollTrigger measure page/element
     // positions once, at creation time. Async content that settles afterward
-    // — Hero's frame sequence preload, Flagship Battery's video, web fonts —
+    // — Hero's background film, Flagship Battery's video, web fonts —
     // can still shift layout, leaving those cached boundaries stale (the
     // same root cause documented for an earlier Chapter 2 pin-registration
     // bug in this project). A section whose trigger boundary lands past

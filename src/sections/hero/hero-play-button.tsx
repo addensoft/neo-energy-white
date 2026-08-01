@@ -3,20 +3,20 @@
 import { Pause, Play } from "lucide-react";
 
 /**
- * HeroPlayButton — bottom-left glassmorphism control that auto-advances the
- * film (see `use-hero-autoplay.ts` — it drives the same scroll position the
- * film already scrubs from, via Lenis, rather than a second animation
- * system) so a visitor who'd rather not scroll can just watch it play.
+ * HeroPlayButton — bottom-left glassmorphism control that plays and pauses
+ * the Hero film (see `use-hero-video.ts`).
+ *
+ * Always rendered, unlike the scroll-driven version it replaces. The film
+ * auto-plays and loops forever, so WCAG 2.2.2 requires a way to stop it; it's
+ * also the recovery path when a browser refuses auto-play, and the way in
+ * under `prefers-reduced-motion`, where the film waits on its poster frame.
  */
 type HeroPlayButtonProps = {
-  visible: boolean;
   isPlaying: boolean;
   onToggle: () => void;
 };
 
-export function HeroPlayButton({ visible, isPlaying, onToggle }: HeroPlayButtonProps) {
-  if (!visible) return null;
-
+export function HeroPlayButton({ isPlaying, onToggle }: HeroPlayButtonProps) {
   return (
     <button
       type="button"

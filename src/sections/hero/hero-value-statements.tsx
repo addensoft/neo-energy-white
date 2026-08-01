@@ -2,20 +2,20 @@ import type { RefObject } from "react";
 
 import { Paragraph } from "@/components/ui";
 
-import { VALUE_STATEMENTS } from "./hero-frames";
+import { VALUE_STATEMENTS } from "./hero-film";
 
 /**
  * HeroValueStatements — one engineering credibility line visible at a time
- * while scrolling through the film's B-roll (see `use-hero-scroll.ts` for the
- * GSAP timeline driving each line's fade/translate in and out). All six sit
- * stacked in the exact same spot so swapping between them never shifts
- * layout — only opacity/transform differ, driven entirely by the refs below.
+ * over the film's B-roll (see `use-hero-sequence.ts` for the GSAP timeline
+ * driving each line's fade/translate in and out). All six sit stacked in the
+ * exact same spot so swapping between them never shifts layout — only
+ * opacity/transform differ, driven entirely by the refs below.
  *
- * White type (this sits over the raw cinematic footage, before the film's
- * light closing scrim appears — same reasoning as Hero's other pre-scrim
- * copy) and positioned clear of both the main headline zone (bottom-14%)
- * and the scroll hint/play button (bottom-8), so it never competes with
- * either for the same space.
+ * Each line rides its own glass chip. The scroll-scrubbed build could place
+ * these lines on known-dark frames; a looping video can't, and the film's
+ * closing studio shot is near-white, so plain white type would vanish on it.
+ * Positioned clear of both the headline zone (bottom-14%) and the scroll
+ * hint/play button (bottom-8), so it never competes for the same space.
  */
 type HeroValueStatementsProps = {
   statementRefs: RefObject<HTMLDivElement[]>;
@@ -38,7 +38,7 @@ export function HeroValueStatements({ statementRefs }: HeroValueStatementsProps)
           >
             <Paragraph
               size="lead"
-              className="text-white/90 max-w-xl text-base text-balance text-center sm:text-lg"
+              className="rounded-full border border-white/20 bg-black/50 px-6 py-2.5 text-center text-base text-balance text-white backdrop-blur-md sm:px-7"
             >
               {text}
             </Paragraph>

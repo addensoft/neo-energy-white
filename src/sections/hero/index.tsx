@@ -3,34 +3,33 @@
 import { useHeroPhase } from "@/components/providers/hero-phase-provider";
 import { Section } from "@/components/section";
 
+import { HERO_POSTER_SRC, HERO_VIDEO_SRC } from "./hero-film";
 import { HeroCopy } from "./hero-copy";
 import { HeroIntro } from "./hero-intro";
 import { HeroPlayButton } from "./hero-play-button";
 import { HeroScrollHint } from "./hero-scroll-hint";
 import { HeroValueStatements } from "./hero-value-statements";
-import { ScrollCue } from "./scroll-cue";
-import { useHeroAutoplay } from "./use-hero-autoplay";
-import { useHeroScroll } from "./use-hero-scroll";
+import { useHeroSequence } from "./use-hero-sequence";
+import { useHeroVideo } from "./use-hero-video";
 
 /**
- * Chapter 0 — Hero, scroll-scrubbed. Creative Direction §2, §5, §9 (revised).
+ * Chapter 0 — Hero. Creative Direction §2, §5, §9 (revised).
  *
- * The real Hero film (new-hero-video.mp4 → 361-frame WebP sequence) plays
- * back entirely under scroll control. See use-hero-scroll.ts for why this is
- * a canvas frame sequence rather than `<video>.currentTime` scrubbing, and
- * hero-frames.ts for the source specs.
+ * The film plays as a looping background video: it starts on its own, repeats
+ * forever, and the Hero is one ordinary full-viewport section, so the visitor
+ * can scroll on to Trust & Technology whenever they like. The previous
+ * scroll-scrubbed build (a pinned section scrubbing a 361-frame canvas
+ * sequence off the scrollbar, +350vh of scroll to get through it) was removed
+ * per direct instruction — see `use-hero-sequence.ts`.
  *
- * Final client-approved polish layers four premium touches on top of the
- * unchanged scroll-scrub mechanism: a brief keynote-style title card on
- * load (`HeroIntro`), a "scroll to discover" hint that teaches first-time
- * visitors the film responds to scroll, a play/pause control that drives
- * the same scroll range programmatically for visitors who'd rather watch
- * than scroll, and a cycling highlight reel of engineering statements
- * during the film's B-roll.
+ * The copy is unchanged: the keynote-style title card on load (`HeroIntro`),
+ * the cycling reel of engineering statements (`HeroValueStatements`), and the
+ * headline that settles in and stays (`HeroCopy`). All three now run on a
+ * real-time timeline instead of a scroll position.
  */
 export function Hero() {
   const {
-    canvasRef,
+    videoRef,
     headlineRef,
     sublineRef,
     signatureRef,
@@ -38,40 +37,45 @@ export function Hero() {
     introRef,
     statementRefs,
     sectionRef,
-    scrollTriggerRef,
-    hasStartedScrolling,
-    loadProgress,
-    ready,
-  } = useHeroScroll();
+  } = useHeroSequence();
   const { phase } = useHeroPhase();
-  const { isPlaying, togglePlay, controlVisible } = useHeroAutoplay({
-    ready,
-    sectionRef,
-    scrollTriggerRef,
-  });
+  const { isPlaying, togglePlay } = useHeroVideo(videoRef);
 
   return (
     <Section
       id="hero"
       ref={sectionRef}
-      className="bg-void min-h-[100dvh] lg:min-h-screen"
+      // Near-black base rather than the site's white `bg-void`: it sits under
+      // the film's dark opening shot, so the white title card is legible from
+      // the first paint, before the poster has even decoded.
+      className="bg-foreground min-h-[100dvh] lg:min-h-screen"
     >
-      <canvas
-        ref={canvasRef}
+      <video
+        ref={videoRef}
+        src={HERO_VIDEO_SRC}
+        poster={HERO_POSTER_SRC}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
         aria-hidden="true"
-        className="absolute inset-0 h-full w-full"
+        tabIndex={-1}
+        className="absolute inset-0 h-full w-full object-cover"
       />
 
-      {!ready && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          {/* No frame has painted onto the canvas yet at this point, so this
-              sits directly on the Section's own (light) background — dark ink,
-              not light text. */}
-          <span className="text-foreground/70 font-mono text-xs tracking-[0.16em] uppercase">
-            Loading {Math.round(loadProgress * 100)}%
-          </span>
-        </div>
-      )}
+      {/*
+        Permanent grade over the film. The old build could tune each overlay to
+        the shot underneath it, because scroll position and frame number were
+        the same number — white type over the dark opening, dark ink over the
+        light closing studio shot. A looping video has no such guarantee: every
+        beat now has to stay legible over both extremes, so the film carries a
+        constant bottom-weighted darkening and all Hero type is white.
+      */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/15"
+      />
 
       <HeroIntro introRef={introRef} />
 
@@ -84,15 +88,12 @@ export function Hero() {
         signatureRef={signatureRef}
       />
 
-      {/* `phase !== "settled"` also covers `prefers-reduced-motion`: that
-          path resolves straight to "settled" on mount (see use-hero-scroll.ts),
-          so the hint correctly never appears when there's nothing left to
-          scroll and discover. */}
-      <HeroScrollHint visible={ready && !hasStartedScrolling && phase !== "settled"} />
+      <HeroPlayButton isPlaying={isPlaying} onToggle={togglePlay} />
 
-      <HeroPlayButton visible={controlVisible} isPlaying={isPlaying} onToggle={togglePlay} />
-
-      <ScrollCue visible={phase === "settled"} />
+      {/* Appears with the navbar, once the title card has cleared, and stays:
+          the film loops forever, so there is no "finished" moment to wait for
+          before inviting the visitor onward. */}
+      <HeroScrollHint visible={phase === "settled"} />
     </Section>
   );
 }

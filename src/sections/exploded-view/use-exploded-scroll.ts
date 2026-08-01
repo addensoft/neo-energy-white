@@ -141,10 +141,15 @@ export function useExplodedScroll(
       );
     }, heroEl);
 
-    // Hero's own pin (Chapter 0) is created asynchronously — its
-    // ScrollTrigger waits on image preload (see use-hero-scroll.ts) — so
-    // this trigger can end up *registered* with GSAP before Hero's, even
-    // though Hero comes first in the DOM. ScrollTrigger calculates
+    // Written when Hero (Chapter 0) still pinned and scroll-scrubbed a frame
+    // sequence, registering its own ScrollTrigger asynchronously once that
+    // preload finished. Hero no longer pins at all (it's a looping background
+    // video now — see `sections/hero/use-hero-sequence.ts`), but the ordering
+    // hazard below applies to any async-registered pin above this section, so
+    // the sort/refresh stays. This section is on hold and unrendered.
+    //
+    // A trigger can end up *registered* with GSAP before an earlier
+    // section's, even though that section comes first in the DOM. ScrollTrigger calculates
     // cumulative pin-spacer offsets in registration order, so out-of-order
     // registration bakes in a start/end measured against a page that
     // doesn't yet include Hero's pin-spacer — and a plain refresh() doesn't

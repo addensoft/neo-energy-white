@@ -12,8 +12,13 @@ const nextConfig: NextConfig = {
   },
 
   images: {
-    // No remote image sources yet — every asset ships from /public until a
-    // CMS or CDN is introduced. Revisit once real chapter media lands.
+    // Every real chapter asset still ships from /public — the one exception
+    // is `/team`'s placeholder avatars (see `team-grid.tsx`), generated
+    // illustrations from DiceBear rather than photos of real people, fetched
+    // as PNG specifically so this doesn't need `dangerouslyAllowSVG`. Remove
+    // this pattern once the real team roster (with real photos, if any)
+    // replaces the placeholder one.
+    remotePatterns: [{ protocol: "https", hostname: "api.dicebear.com" }],
     formats: ["image/avif", "image/webp"],
   },
 };

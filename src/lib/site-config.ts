@@ -15,9 +15,8 @@ export const siteConfig = {
   /** Client-confirmed production domain. Feeds `metadataBase`, the Open
    * Graph URL, `sitemap.xml` and `robots.txt`. */
   url: "https://neoenergybatt.com",
-  // Placeholder pending the client's real inbox — note this still sits on
-  // the older neoenergy.sg domain, not neoenergybatt.com; confirm before launch.
-  contactEmail: "contact@neoenergy.sg",
+  // Client-confirmed inbox, matching the production neoenergybatt.com domain.
+  contactEmail: "enquiry@neoenergybatt.com",
   /** Client-confirmed WhatsApp line. `whatsappNumber` is digits-only for
    * wa.me deep links; `whatsappDisplay` is the human-readable form. */
   whatsappNumber: "6580712233",
@@ -35,21 +34,31 @@ export type NavLink = {
 
 /**
  * Primary navigation — full multi-page structure (site is expanding beyond a
- * single homepage). Career, Promo, and App are approved nav items whose
- * destination pages don't exist yet — `href="#"` until they're built, same
- * placeholder convention used everywhere else content isn't confirmed real.
+ * single homepage).
+ *
+ * "Home", "Contact Us", "About Us", "App", "Career", "Promo", "News", "Our
+ * Team", and "Our Principles" are real routes, not homepage-only anchors —
+ * the site now has `/contact`, `/about`, `/app`, `/career`, `/promo`,
+ * `/news`, `/team`, and `/principles` pages, so all nine must resolve
+ * correctly from anywhere, not just while already on `/`. "Our Mission" is
+ * still a real section on `/about` (see
+ * `app/(main)/about/about-mission.tsx`) so it links straight to that
+ * anchor. `/team`'s roster is placeholder data pending the client's real
+ * one — see `app/(main)/team/team-grid.tsx`; `/principles` is a denser,
+ * dedicated presentation of facts already established across About/Repair/
+ * Trust Bar — see `app/(main)/principles/page.tsx`.
  */
 export const primaryNav: readonly NavLink[] = [
-  { label: "Home", href: "#hero" },
+  { label: "Home", href: "/" },
   {
     label: "About",
     href: "#",
     children: [
-      { label: "About Us", href: "#" },
-      { label: "Our Mission", href: "#" },
-      { label: "Our Team", href: "#" },
-      { label: "Our Principles", href: "#" },
-      { label: "News", href: "#" },
+      { label: "About Us", href: "/about" },
+      { label: "Our Mission", href: "/about#mission" },
+      { label: "Our Team", href: "/team" },
+      { label: "Our Principles", href: "/principles" },
+      { label: "News", href: "/news" },
     ],
   },
   {
@@ -63,10 +72,10 @@ export const primaryNav: readonly NavLink[] = [
       { label: "Upgrades", href: "#" },
     ],
   },
-  { label: "Career", href: "#" },
-  { label: "Promo", href: "#" },
-  { label: "App", href: "#" },
-  { label: "Contact Us", href: "#cta" },
+  { label: "Career", href: "/career" },
+  { label: "Promo", href: "/promo" },
+  { label: "App", href: "/app" },
+  { label: "Contact Us", href: "/contact" },
 ] as const;
 
 /**

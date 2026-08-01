@@ -101,6 +101,22 @@
     border-color: var(--color-border);
   }
 
+  /* Several sections use large centered ambient glow blobs (e.g.
+     `w-[40rem]` circles, `left-1/2 -translate-x-1/2`) that are wider than a
+     mobile viewport by design — the soft light is meant to bleed off both
+     edges. Each of those sections clips its own blob with `overflow-hidden`,
+     but that only stops the blob from *painting* outside the section; it
+     doesn't stop the section's own box, sized before the transform is
+     applied, from being counted in the page's horizontal scroll extent.
+     This is the actual backstop: no element on the page can ever open up
+     horizontal scroll, regardless of which section's decorative background
+     is the culprit on a given page. Vertical scrolling (including Lenis's
+     smooth-scroll, which scrolls the whole document) is unaffected. */
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
   body {
     background: var(--color-background);
     color: var(--color-foreground);

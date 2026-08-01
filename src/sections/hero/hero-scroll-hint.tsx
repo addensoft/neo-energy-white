@@ -6,10 +6,13 @@ import { DURATION, EASE_ENGINEERED } from "@/lib/motion-tokens";
 
 /**
  * HeroScrollHint — "Scroll Down To Discover More" + an animated scroll-mouse
- * glyph, bottom-center. Distinct from `ScrollCue` (the chevron that appears
- * once the film has *settled*, inviting the visitor onward to the next
- * section) — this one appears early, teaching a first-time visitor that the
- * film responds to scroll at all, then disappears the moment they start.
+ * glyph, bottom-center. Appears as soon as the title card clears and stays:
+ * the film loops forever now, so there's no end-of-film moment to wait for
+ * before inviting the visitor onward.
+ *
+ * It absorbed the job of the old `ScrollCue` chevron (removed with the
+ * scroll-scrub build) — one scroll invitation, not two, and this is the
+ * explicit one.
  */
 export function HeroScrollHint({ visible }: { visible: boolean }) {
   return (
