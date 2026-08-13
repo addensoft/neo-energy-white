@@ -55,9 +55,7 @@ export default async function WorkshopServicePage({ params }: Props) {
       <EarthCta
         heading={
           <>
-            Ready To Book
-            <br />
-            <span className="text-ion">{service.title}?</span>
+            Book <span className="text-ion">{service.title}?</span>
           </>
         }
         body="Talk directly to the team who'll actually do the work — not a call centre."

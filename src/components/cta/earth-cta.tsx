@@ -44,7 +44,7 @@ export function EarthCta({
         />
       </div>
 
-      <div className="px-gutter lg:px-gutter-lg relative z-10 flex h-full min-h-[42vh] flex-col justify-center gap-6 py-16 lg:min-h-[54vh] lg:max-w-[38vw] lg:py-0">
+      <div className="px-gutter lg:px-gutter-lg relative z-10 flex h-full min-h-[42vh] flex-col justify-center gap-6 py-16 lg:min-h-[54vh] lg:max-w-[50vw] lg:py-0">
         <RevealWrapper variant="blur" duration={1}>
           <Heading as="h2" size="h2" className="text-white uppercase">
             {heading}
@@ -58,11 +58,15 @@ export function EarthCta({
         </RevealWrapper>
 
         <RevealWrapper variant="fade" delay={0.3}>
-          <div className="flex flex-wrap items-center gap-4">
+          {/* `flex` with each Button `flex-1`, not `flex-wrap` — the two
+              actions stay side by side as equal columns at every viewport
+              width, rather than the second one dropping to its own row on
+              narrow screens. */}
+          <div className="flex items-center gap-3">
             <Button
               href={primaryHref}
               variant="primary"
-              className="border-white bg-transparent text-white"
+              className="flex-1 justify-center border-white bg-transparent px-4 text-white sm:px-8"
             >
               {primaryLabel}
             </Button>
@@ -72,7 +76,7 @@ export function EarthCta({
                 href={secondaryHref}
                 {...(secondaryExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 variant="primary"
-                className="border-white bg-transparent text-white"
+                className="flex-1 justify-center border-white bg-transparent px-4 text-white sm:px-8"
               >
                 {secondaryLabel}
               </Button>

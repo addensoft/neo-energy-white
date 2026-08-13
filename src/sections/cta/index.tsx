@@ -85,12 +85,10 @@ export function CTA() {
           the client), so the old lg:mt-16 downward nudge is dropped; letting
           Section's own justify-center handle balance keeps it from reading
           as dead space above the heading now that there's less room. */}
-      <div className="px-gutter lg:px-gutter-lg relative z-10 flex flex-col justify-center gap-6 py-8 lg:max-w-[38vw] lg:py-0">
+      <div className="px-gutter lg:px-gutter-lg relative z-10 flex flex-col justify-center gap-6 py-8 lg:max-w-[50vw] lg:py-0">
         <div ref={headingRef}>
           <Heading as="h2" size="h2" className="text-white uppercase">
-            Let&apos;s Build The
-            <br />
-            Future of <span className="text-ion">Energy.</span>
+            Let&apos;s Build The Future of <span className="text-ion">Energy.</span>
           </Heading>
         </div>
 

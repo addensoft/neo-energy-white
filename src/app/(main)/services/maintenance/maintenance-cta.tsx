@@ -21,12 +21,10 @@ export function MaintenanceCta() {
         />
       </div>
 
-      <div className="px-gutter lg:px-gutter-lg relative z-10 flex h-full min-h-[42vh] flex-col justify-center gap-6 py-16 lg:min-h-[54vh] lg:max-w-[38vw] lg:py-0">
+      <div className="px-gutter lg:px-gutter-lg relative z-10 flex h-full min-h-[42vh] flex-col justify-center gap-6 py-16 lg:min-h-[54vh] lg:max-w-[50vw] lg:py-0">
         <RevealWrapper variant="blur" duration={1}>
           <Heading as="h2" size="h2" className="text-white uppercase">
-            Put Your Fleet On A
-            <br />
-            <span className="text-ion">Schedule.</span>
+            Put Your Fleet On A <span className="text-ion">Schedule.</span>
           </Heading>
         </RevealWrapper>
 
