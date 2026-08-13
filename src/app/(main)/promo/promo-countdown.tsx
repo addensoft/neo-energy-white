@@ -13,6 +13,12 @@ import { useEffect, useState } from "react";
  * depends on the visitor's own clock at the moment they load the page, which
  * a server render can't know. Starts from `null` (renders nothing extra
  * until mounted) to avoid a server/client markup mismatch on first paint.
+ *
+ * Digit boxes are solid dark regardless of page background (matching
+ * TeamAuto's own countdown, which stays dark-on-light on their page too) —
+ * not `text-white`/`bg-white` translucent, which was originally tuned for
+ * sitting directly on a dark photo and went invisible the moment this
+ * moved onto a plain light section.
  */
 type TimeLeft = {
   days: number;
@@ -60,7 +66,7 @@ export function PromoCountdown({ targetIso }: { targetIso: string }) {
 
   if (!timeLeft) {
     return (
-      <span className="font-mono text-sm font-semibold tracking-[0.08em] text-white/70 uppercase">
+      <span className="text-muted font-mono text-sm font-semibold tracking-[0.08em] uppercase">
         This offer has ended
       </span>
     );
@@ -70,10 +76,10 @@ export function PromoCountdown({ targetIso }: { targetIso: string }) {
     <div className="flex items-center gap-3" role="timer" aria-live="polite">
       {UNITS.map((unit) => (
         <div key={unit.key} className="flex flex-col items-center gap-1">
-          <span className="border-white/20 bg-white/10 flex h-12 w-12 items-center justify-center rounded-md border font-mono text-lg font-bold text-white backdrop-blur-sm sm:h-14 sm:w-14 sm:text-xl">
+          <span className="bg-foreground text-background flex h-12 w-12 items-center justify-center rounded-md font-mono text-lg font-bold sm:h-14 sm:w-14 sm:text-xl">
             {String(timeLeft[unit.key]).padStart(2, "0")}
           </span>
-          <span className="font-mono text-[0.6rem] tracking-[0.1em] text-white/60 uppercase">
+          <span className="text-muted font-mono text-[0.6rem] tracking-[0.1em] uppercase">
             {unit.label}
           </span>
         </div>
