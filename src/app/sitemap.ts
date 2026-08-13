@@ -2,18 +2,22 @@ import type { MetadataRoute } from "next";
 
 import { newsArticles } from "@/lib/news";
 import { siteConfig } from "@/lib/site-config";
+import { workshopServices } from "@/lib/workshop-services";
 
 /** Every real, resolvable route on the site — kept in one place so a new
  * page (like `/privacy` and `/terms` above) shows up here the same day it's
  * built, instead of silently missing from search-engine discovery. News
- * articles are appended from `@/lib/news.ts` rather than hand-listed, so a
- * new article is picked up automatically. */
+ * articles and the 13 workshop-service pages are appended from their own
+ * data files rather than hand-listed, so a new one is picked up
+ * automatically. */
 const STATIC_ROUTES = [
   "",
   "/about",
   "/app",
   "/career",
   "/contact",
+  "/faq",
+  "/gallery",
   "/news",
   "/principles",
   "/privacy",
@@ -39,5 +43,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...articleEntries];
+  const workshopServiceEntries: MetadataRoute.Sitemap = workshopServices.map((service) => ({
+    url: `${siteConfig.url}/services/${service.slug}`,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticEntries, ...workshopServiceEntries, ...articleEntries];
 }

@@ -8,7 +8,12 @@ import { useEffect, useState } from "react";
 import { useHeroPhase } from "@/components/providers/hero-phase-provider";
 import { Button } from "@/components/ui";
 import { DURATION, EASE_ENGINEERED } from "@/lib/motion-tokens";
-import { primaryNav, siteConfig, type NavLink as NavLinkData } from "@/lib/site-config";
+import {
+  primaryNav,
+  siteConfig,
+  type NavChild as NavChildData,
+  type NavLink as NavLinkData,
+} from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 
 /**
@@ -54,8 +59,43 @@ function NavLink({
   );
 }
 
-/** "About" / "Services" — hover/focus reveals a light dropdown panel of sub-pages. */
+/** Splits a flat children array into `{ group, links }` buckets, preserving
+ * first-appearance order. Ungrouped children (no `group` set — About's own
+ * items) land under a single `undefined` bucket, which renders as a plain
+ * flat list with no heading, same as before groups existed. */
+function groupChildren(children: readonly NavChildData[]) {
+  const order: (string | undefined)[] = [];
+  const buckets = new Map<string | undefined, NavChildData[]>();
+  for (const child of children) {
+    if (!buckets.has(child.group)) {
+      buckets.set(child.group, []);
+      order.push(child.group);
+    }
+    buckets.get(child.group)!.push(child);
+  }
+  return order.map((group) => ({ group, links: buckets.get(group)! }));
+}
+
+function DropdownLink({ child }: { child: NavChildData }) {
+  return (
+    <a
+      href={child.href}
+      {...(child.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      className="text-foreground/80 hover:bg-graphite-light hover:text-foreground ease-engineered block rounded-md px-3 py-2 font-mono text-[0.75rem] tracking-[0.08em] uppercase transition-colors duration-200"
+    >
+      {child.label}
+    </a>
+  );
+}
+
+/** "About" / "Services" — hover/focus reveals a light dropdown panel of sub-pages.
+ * Services now carries enough items (13 workshop services + 3 quick links + 4 EV
+ * services) to need real grouping — `wide` switches the panel to a multi-column
+ * grid with group headings instead of the single narrow column About still uses. */
 function NavDropdown({ item, active }: { item: NavLinkData; active: boolean }) {
+  const groups = groupChildren(item.children ?? []);
+  const wide = groups.length > 1 || groups.some((g) => g.links.length > 8);
+
   return (
     <div className="group relative">
       <button
@@ -73,18 +113,22 @@ function NavDropdown({ item, active }: { item: NavLinkData; active: boolean }) {
 
       <div
         className={cn(
-          "ease-engineered border-border bg-background invisible absolute top-full left-1/2 z-10 mt-3 w-56 -translate-x-1/2 translate-y-1 rounded-lg border p-2 opacity-0 shadow-[var(--shadow-elevation-md)] transition-all duration-300",
+          "ease-engineered border-border bg-background invisible absolute top-full left-1/2 z-10 mt-3 max-h-[75vh] -translate-x-1/2 translate-y-1 overflow-y-auto rounded-lg border p-2 opacity-0 shadow-[var(--shadow-elevation-md)] transition-all duration-300",
+          wide ? "grid w-[42rem] grid-cols-3 gap-1 p-4" : "w-56",
           "group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100",
         )}
       >
-        {item.children?.map((child) => (
-          <a
-            key={child.label}
-            href={child.href}
-            className="text-foreground/80 hover:bg-graphite-light hover:text-foreground ease-engineered block rounded-md px-3 py-2 font-mono text-[0.75rem] tracking-[0.08em] uppercase transition-colors duration-200"
-          >
-            {child.label}
-          </a>
+        {groups.map(({ group, links }) => (
+          <div key={group ?? "_"} className={cn(wide && "flex flex-col gap-1")}>
+            {group && (
+              <span className="text-muted block px-3 pt-2 pb-1 font-mono text-[0.65rem] font-semibold tracking-[0.1em] uppercase">
+                {group}
+              </span>
+            )}
+            {links.map((child) => (
+              <DropdownLink key={child.label} child={child} />
+            ))}
+          </div>
         ))}
       </div>
     </div>
@@ -118,19 +162,31 @@ function MobileAccordion({
         />
       </button>
       {open && (
-        <ul className="flex flex-col gap-1 pb-2 pl-4">
-          {item.children?.map((child) => (
-            <li key={child.label}>
-              <a
-                href={child.href}
-                onClick={onNavigate}
-                className="text-foreground/60 hover:text-foreground ease-engineered block py-2 font-mono text-[0.78rem] tracking-[0.08em] uppercase transition-colors duration-300"
-              >
-                {child.label}
-              </a>
-            </li>
+        <div className="flex flex-col gap-1 pb-2 pl-4">
+          {groupChildren(item.children ?? []).map(({ group, links }) => (
+            <div key={group ?? "_"}>
+              {group && (
+                <span className="text-muted/80 block pt-2 pb-1 font-mono text-[0.65rem] font-semibold tracking-[0.1em] uppercase">
+                  {group}
+                </span>
+              )}
+              <ul className="flex flex-col gap-1">
+                {links.map((child) => (
+                  <li key={child.label}>
+                    <a
+                      href={child.href}
+                      onClick={onNavigate}
+                      {...(child.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      className="text-foreground/60 hover:text-foreground ease-engineered block py-2 font-mono text-[0.78rem] tracking-[0.08em] uppercase transition-colors duration-300"
+                    >
+                      {child.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

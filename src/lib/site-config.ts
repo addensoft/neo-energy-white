@@ -1,3 +1,5 @@
+import { workshopServices } from "./workshop-services";
+
 /**
  * Single source of truth for site-wide identity, navigation, and SEO defaults.
  * Sourced from the approved Creative Direction document (§1 Brand Foundation, §12 Premium UI Layout).
@@ -25,11 +27,24 @@ export const siteConfig = {
   themeColor: "#FFFFFF",
 } as const;
 
+export type NavChild = {
+  label: string;
+  href: string;
+  /** Groups children under a heading inside the dropdown — used by Services,
+   * which is large enough now to need one. Consecutive children sharing a
+   * `group` render under one heading; ungrouped children (About's) render
+   * as a plain flat list, unchanged from before. */
+  group?: string;
+  /** Opens in a new tab — for the government e-service links, which take
+   * the visitor entirely off this site. */
+  external?: boolean;
+};
+
 export type NavLink = {
   label: string;
   href: string;
   /** Dropdown sub-items — "About" and "Services" render as hover/focus menus. */
-  children?: readonly { label: string; href: string }[];
+  children?: readonly NavChild[];
 };
 
 /**
@@ -37,23 +52,32 @@ export type NavLink = {
  * single homepage).
  *
  * "Home", "Contact Us", "About Us", "App", "Career", "Promo", "News", "Our
- * Team", "Our Principles", "Battery Systems", "Component Repair",
- * "Maintenance", and "Diagnostics" are real routes, not homepage-only
- * anchors — the site now has `/contact`, `/about`, `/app`, `/career`,
- * `/promo`, `/news`, `/team`, `/principles`, `/services/battery-systems`,
- * `/services/component-repair`, `/services/maintenance`, and
- * `/services/diagnostics` pages, so all thirteen must resolve correctly
- * from anywhere, not just while already on `/`. "Our Mission" is still a
- * real section on `/about` (see `app/(main)/about/about-mission.tsx`) so it
- * links straight to that anchor. `/team`'s roster is placeholder data
- * pending the client's real one — see `app/(main)/team/team-grid.tsx`;
- * `/principles` is a denser, dedicated presentation of facts already
- * established across About/Repair/Trust Bar — see
- * `app/(main)/principles/page.tsx`. "Upgrades" was dropped from this menu
- * per direct instruction — it never had a real destination or confirmed
- * content (unlike its four siblings above, it's undescribed anywhere in
- * this project: no client brief mention, no Creative Direction copy, no
- * capability card).
+ * Team", "Our Principles", "Our Gallery", "FAQ", "Battery Systems",
+ * "Component Repair", "Maintenance", "Diagnostics", and the 13 workshop
+ * services in `@/lib/workshop-services.ts` are real routes, not
+ * homepage-only anchors. "Our Mission" is still a real section on `/about`
+ * (see `app/(main)/about/about-mission.tsx`) so it links straight to that
+ * anchor. `/team`'s roster is placeholder data pending the client's real
+ * one — see `app/(main)/team/team-grid.tsx`; `/principles` is a denser,
+ * dedicated presentation of facts already established across
+ * About/Repair/Trust Bar — see `app/(main)/principles/page.tsx`.
+ *
+ * Services and About were restructured to mirror teamauto.sg's menu
+ * (NEO Energy's parent business, TEAM AUTOPRO Pte Ltd — client-confirmed)
+ * per direct instruction: Services' "Workshop Services" group is TeamAuto's
+ * real service list, adapted (see `@/lib/workshop-services.ts` for what
+ * that adaptation means); NEO's own 4 EV-specific services stay listed,
+ * moved to the bottom of the dropdown rather than removed, per direct
+ * instruction ("keep neo already services pages at bottom"). "Quick Links"
+ * carries over the real government e-service links from TeamAuto's own
+ * menu (Pay Parking Fines, Pay Traffic Fines, Renew Road Tax) — TeamAuto's
+ * menu had two near-identical "Pay Parking Fines" entries pointing at the
+ * same HDB URL (HDB and URA); the URA one looks like a copy-paste error on
+ * the source site, not a distinct real destination, so it wasn't carried
+ * over rather than guessing at what URA's own portal URL should be. About
+ * gained "Our Gallery" and "FAQ" (also TeamAuto structure, real new pages —
+ * see `app/(main)/gallery/page.tsx` and `app/(main)/faq/page.tsx`), added
+ * rather than replacing NEO's own existing items.
  */
 export const primaryNav: readonly NavLink[] = [
   { label: "Home", href: "/" },
@@ -62,6 +86,8 @@ export const primaryNav: readonly NavLink[] = [
     href: "#",
     children: [
       { label: "About Us", href: "/about" },
+      { label: "Our Gallery", href: "/gallery" },
+      { label: "FAQ", href: "/faq" },
       { label: "Our Mission", href: "/about#mission" },
       { label: "Our Team", href: "/team" },
       { label: "Our Principles", href: "/principles" },
@@ -72,10 +98,35 @@ export const primaryNav: readonly NavLink[] = [
     label: "Services",
     href: "#",
     children: [
-      { label: "Battery Systems", href: "/services/battery-systems" },
-      { label: "Component Repair", href: "/services/component-repair" },
-      { label: "Maintenance", href: "/services/maintenance" },
-      { label: "Diagnostics", href: "/services/diagnostics" },
+      ...workshopServices.map(
+        (service): NavChild => ({
+          label: service.title,
+          href: `/services/${service.slug}`,
+          group: "Workshop Services",
+        }),
+      ),
+      {
+        label: "Pay Parking Fines (HDB)",
+        href: "https://services2.hdb.gov.sg/webapp/BL16AWESVPAYMENT/faces/JSP/eservices/pay/BL16REPayFromESVSearch.jsp",
+        group: "Quick Links",
+        external: true,
+      },
+      {
+        label: "Pay Traffic Fines (LTA)",
+        href: "https://onemotoring.lta.gov.sg/",
+        group: "Quick Links",
+        external: true,
+      },
+      {
+        label: "Renew Road Tax",
+        href: "https://vrl.lta.gov.sg/lta/vrl/action/pubfunc?ID=RoadTaxEnquiry",
+        group: "Quick Links",
+        external: true,
+      },
+      { label: "Battery Systems", href: "/services/battery-systems", group: "EV Battery Services" },
+      { label: "Component Repair", href: "/services/component-repair", group: "EV Battery Services" },
+      { label: "Maintenance", href: "/services/maintenance", group: "EV Battery Services" },
+      { label: "Diagnostics", href: "/services/diagnostics", group: "EV Battery Services" },
     ],
   },
   { label: "Career", href: "/career" },
