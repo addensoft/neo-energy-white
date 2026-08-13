@@ -30,8 +30,8 @@ export function PromoHero() {
 
       <RevealWrapper variant="fade" delay={0.3}>
         <Paragraph size="body" className="max-w-xl text-balance text-white/80">
-          Exclusive limited-time offers for fleet, dealership, private, and
-          service accounts — several live right now.
+          A limited-time servicing bundle, plus what Premier and Prestige
+          membership actually gets you — live now.
         </Paragraph>
       </RevealWrapper>
     </PageBanner>

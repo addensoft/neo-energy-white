@@ -6,10 +6,10 @@ import { Button, Heading, Paragraph } from "@/components/ui";
 
 /**
  * DiagnosticsCta — closes on the same Earth banner used sitewide, routing
- * to Contact. Also links to `/promo`, where "Your First Battery
- * Diagnostic" (15% off for first-time customers) is a real live offer —
- * directly relevant to a visitor reading this exact page, not a generic
- * cross-link.
+ * to Contact. Also links to `/promo` — that page's own current offer
+ * changed (see `promo-offers.tsx`), so this stays a general pointer to
+ * "see what's live" rather than naming a specific discount that could go
+ * stale again the next time that page's content changes.
  */
 export function DiagnosticsCta() {
   return (
@@ -52,7 +52,7 @@ export function DiagnosticsCta() {
               href="/promo"
               className="ease-engineered font-mono text-xs font-semibold tracking-[0.04em] text-white/70 uppercase underline decoration-white/30 underline-offset-4 transition-colors duration-300 hover:text-white"
             >
-              15% Off Your First Diagnostic
+              See Current Offers
             </Link>
           </div>
         </RevealWrapper>
