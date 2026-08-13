@@ -14,30 +14,33 @@ import { PromoCountdown } from "./promo-countdown";
 
 /**
  * PromoOffers — rebuilt from TEAM AUTOPRO's own live "Our Promotion" page
- * (NEO Energy's parent business, client-confirmed), per direct instruction
- * to replace this page's content with theirs. Previously this held six
- * invented small offers behind a category filter; none of that survived —
- * this is the one real bundle they're actually running (a Shell Helix
- * 5W-40 servicing package + a year of Prestige Membership + a 10-year
- * engine protection plan, $426 value for $108), plus the three membership
- * tiers their own page also lists.
+ * and its promo flyer graphic (NEO Energy's parent business,
+ * client-confirmed), per direct instruction to use the exact same content.
+ * Previously this held six invented small offers behind a category filter;
+ * none of that survived — this is the one real bundle they're actually
+ * running (a Shell Helix 5W-40 servicing package + a year of Prestige
+ * Membership + a 10-year engine protection plan, $426 value for $108),
+ * plus the three membership tiers their own page also lists.
  *
- * Adapted, not copy-pasted:
- *  - Contact routes to NEO's own confirmed WhatsApp/email, not TeamAuto's
- *    own phone line or "redemption exclusively at Team AutoPro Pte Ltd"
- *    (a different registered entity/address than NEO's own).
+ * `PACKAGE_INCLUDES`, `PACKAGE_TERMS`, and the description copy are verbatim
+ * from TeamAuto's own flyer/page text — including "Redemption is valid
+ * exclusively at Team AutoPro Pte Ltd," kept as-is per direct instruction
+ * even though that names a different registered entity than NEO's own
+ * (worth the client's eyes if that line needs updating for NEO's own
+ * redemption point).
+ *
+ * Still adapted rather than copied:
+ *  - Contact buttons route to NEO's own confirmed WhatsApp/email, not
+ *    TeamAuto's own phone line — a functional wiring choice, not page copy.
  *  - Dropped the Shell/Mobil/SAFRA/CaseTrust certification badges their
- *    flyer shows — those are TeamAuto's own specific accreditations; NEO
- *    hasn't confirmed it holds the same ones, and a certification badge is
- *    a factual/trademark claim, not just descriptive copy.
- *  - The 3-tier membership benefits swap out items that don't correspond
- *    to anything an EV-battery-and-workshop business does ("VIP Concierge
- *    Pickup", "Track-Day Support", "Ceramic Coating Refreshes" — reads like
- *    a sports-car club, not a service workshop) for equivalent-tier real
- *    benefits already established elsewhere on this site (free battery
- *    certification report, 12-month extended warranty support), while
- *    keeping the real discount percentages and "no lock-in contract" /
- *    "50 slots annually" terms from the source.
+ *    flyer shows — those are TeamAuto's own specific accreditations, and a
+ *    certification badge is a trademark/factual claim, not descriptive copy.
+ *  - The 3-tier membership benefits still swap out items that don't
+ *    correspond to anything an EV-battery-and-workshop business does ("VIP
+ *    Concierge Pickup", "Track-Day Support", "Ceramic Coating Refreshes" —
+ *    reads like a sports-car club) for equivalent-tier real benefits
+ *    already established elsewhere on this site — flag if these should
+ *    also go back to verbatim.
  *
  * `PROMO_END_ISO` is a proposed draft deadline (30 days out), same
  * disclosure the previous version of this file carried — not a
@@ -45,22 +48,29 @@ import { PromoCountdown } from "./promo-countdown";
  */
 const PROMO_END_ISO = "2026-09-12T23:59:59+08:00";
 
+const PACKAGE_DESCRIPTION =
+  "Uncompromising reliability for the ultimate driving machine. Our Kinetic Atelier Protection Program ensures your performance heart stays pristine for a decade.";
+
+const PACKAGE_TAGLINE =
+  "Rev up your savings with our amazing oil promotion—get up to 75% off and keep your engine (and wallet) running smoothly!";
+
 const PACKAGE_INCLUDES = [
-  "Shell Helix 5W-40 engine oil (4L)",
-  "Engine oil filter",
-  "36-point safety check",
-  "Electronic diagnostics",
-  "1-year Prestige Membership",
-  "10-year engine protection plan (T&Cs apply)",
+  "Shell Helix 5W40 Engine Oil (4L)",
+  "Engine Oil Filter",
+  "36 Points Safety Check",
+  "Electronic Diagnostics",
+  "1 Year Prestige Membership",
+  "10 Years Engine Protection Plan (T&Cs Apply)",
 ];
 
 const PACKAGE_TERMS = [
-  "Upgrade to other oil types available with a top-up",
-  "Not redeemable for cash",
-  "Valid for 6 months from date of issue",
-  "Non-transferable and cannot be resold",
-  "An additional $20 applies for each extra litre of engine oil required",
-  "We reserve the right to modify these terms at any time without prior notice",
+  "This servicing package allows for upgrades to other oils we offer with a top-up.",
+  "This gift voucher is not redeemable for cash.",
+  "Redemption is valid exclusively at Team AutoPro Pte Ltd.",
+  "The voucher is valid for 6 months from the date of issue.",
+  "This voucher is non-transferable and cannot be resold.",
+  "An additional charge of $20 will be applied for each extra litre of engine oil required.",
+  "Management reserves the right to modify these terms and conditions at any time without prior notice.",
 ];
 
 type Tier = {
@@ -165,8 +175,11 @@ export function PromoOffers() {
                   </div>
 
                   <Paragraph size="body" className="text-balance text-white/80">
-                    A full servicing package bundled with a year of Prestige
-                    Membership and ten years of engine protection coverage.
+                    {PACKAGE_DESCRIPTION}
+                  </Paragraph>
+
+                  <Paragraph size="body" className="text-balance text-white/70">
+                    {PACKAGE_TAGLINE}
                   </Paragraph>
 
                   <ul className="flex flex-col gap-2.5">
