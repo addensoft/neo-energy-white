@@ -8,9 +8,9 @@ import { Container } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 /**
- * GalleryGrid — two tabs, "Work" and "Charity", mirroring teamauto.sg's own
- * gallery structure (their "All / Charity / Our Work" filter, minus "All"
- * per direct instruction — just the two).
+ * GalleryGrid — three tabs, "All" / "Charity" / "Work", matching
+ * teamauto.sg's own gallery order (their "All / Charity / Our Work" filter)
+ * per direct instruction.
  *
  * Work: the flagship battery-pack film's own frames (`public/hero-frames`,
  * shot for the Hero section, unused since it moved from scroll-scrubbed
@@ -63,13 +63,16 @@ const CHARITY_IMAGES = [
   { src: "/images/gallery/charity/charity-18.jpeg", alt: "Community charity event" },
 ] as const;
 
+const ALL_IMAGES = [...CHARITY_IMAGES, ...WORK_IMAGES];
+
 const TABS = [
-  { id: "work", label: "Work", images: WORK_IMAGES },
+  { id: "all", label: "All", images: ALL_IMAGES },
   { id: "charity", label: "Charity", images: CHARITY_IMAGES },
+  { id: "work", label: "Work", images: WORK_IMAGES },
 ] as const;
 
 export function GalleryGrid() {
-  const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["id"]>("work");
+  const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["id"]>("all");
   const images = TABS.find((tab) => tab.id === activeTab)!.images;
 
   return (
