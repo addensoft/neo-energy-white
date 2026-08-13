@@ -1,22 +1,31 @@
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
+import Image from "next/image";
 
 import { RevealWrapper } from "@/components/motion/reveal-wrapper";
 import { Container, Heading, Paragraph } from "@/components/ui";
 
 /**
- * ServiceBody — Overview copy, an "Includes" checklist, and an optional
- * "Signs You Need This" list, in that order. The one repeating shape all 13
- * workshop-service pages share; pages without a natural "warning signs" list
- * (e.g. Insurance Claims, Fleet Management) just omit `signs`.
+ * ServiceBody — Overview copy, an optional banner image, an "Includes"
+ * checklist, and an optional "Signs You Need This" list, in that order. The
+ * one repeating shape all 13 workshop-service pages share; pages without a
+ * natural "warning signs" list (e.g. Insurance Claims, Fleet Management)
+ * just omit `signs`. `image` is likewise optional — Tyres Repair has none:
+ * the only image on its TeamAuto source page was mislabelled (a brake-disc
+ * photo on the tyres page), so rather than carry that mismatch over, it's
+ * left as text-only.
  */
 export function ServiceBody({
   overview,
   includes,
   signs,
+  image,
+  imageAlt,
 }: {
   overview: string[];
   includes: string[];
   signs?: string[];
+  image?: string;
+  imageAlt?: string;
 }) {
   return (
     <section className="bg-void relative py-16 lg:py-24">
@@ -28,6 +37,20 @@ export function ServiceBody({
             </RevealWrapper>
           ))}
         </div>
+
+        {image && (
+          <RevealWrapper variant="blur" duration={0.9}>
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg shadow-[0_20px_50px_-24px_rgba(15,23,42,0.28)]">
+              <Image
+                src={image}
+                alt={imageAlt ?? ""}
+                fill
+                sizes="(min-width: 1024px) 900px, 100vw"
+                className="object-cover"
+              />
+            </div>
+          </RevealWrapper>
+        )}
 
         <div className="flex flex-col gap-5">
           <RevealWrapper variant="fade">

@@ -45,7 +45,13 @@ export default async function WorkshopServicePage({ params }: Props) {
         title={service.title}
         summary={service.summary}
       />
-      <ServiceBody overview={service.overview} includes={service.includes} signs={service.signs} />
+      <ServiceBody
+        overview={service.overview}
+        includes={service.includes}
+        signs={service.signs}
+        image={service.image}
+        imageAlt={service.imageAlt}
+      />
       <EarthCta
         heading={
           <>

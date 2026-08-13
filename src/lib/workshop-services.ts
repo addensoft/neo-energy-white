@@ -26,6 +26,13 @@ import {
  * own phone line, and brand-specific claims that belong to a named TeamAuto
  * program (e.g. a specific app, a named warranty plan) are left out rather
  * than presented as NEO's own unconfirmed program.
+ *
+ * `image`/`imageAlt` — client-confirmed as safe to reuse (many are their own
+ * AI-generated images, filenames like `ChatGPT-Image-...`; the rest they've
+ * confirmed carry no copyright restriction on reuse here). Downloaded to
+ * `public/images/services/`. Tyres Repair has no `image`: the only image on
+ * its TeamAuto source page was mislabelled (a brake-disc photo on the tyres
+ * page), so rather than carry that mismatch over, it's left text-only.
  */
 export type WorkshopService = {
   slug: string;
@@ -35,6 +42,8 @@ export type WorkshopService = {
   overview: string[];
   includes: string[];
   signs?: string[];
+  image?: string;
+  imageAlt?: string;
 };
 
 export const workshopServices: WorkshopService[] = [
@@ -54,6 +63,8 @@ export const workshopServices: WorkshopService[] = [
       "Primer application",
       "Paint finishing matched to the vehicle's original colour",
     ],
+    image: "/images/services/accident-repairs.webp",
+    imageAlt: "A car undergoing accident repair work",
   },
   {
     slug: "vehicle-inspection",
@@ -69,6 +80,8 @@ export const workshopServices: WorkshopService[] = [
       "Pre-Purchase inspection — an extensive checklist covering engine and undercarriage noise, and suspension performance",
       "Experienced technicians handling the assessment start to finish",
     ],
+    image: "/images/services/vehicle-inspection.png",
+    imageAlt: "A technician carrying out a vehicle inspection",
   },
   {
     slug: "insurance-claims",
@@ -84,6 +97,8 @@ export const workshopServices: WorkshopService[] = [
       "Help preparing and understanding claim documentation",
       "Advice through the insurer's process, start to finish",
     ],
+    image: "/images/services/insurance-claims.webp",
+    imageAlt: "A car insurance claim form on a table",
   },
   {
     slug: "pre-purchase-vehicle-inspection",
@@ -100,6 +115,8 @@ export const workshopServices: WorkshopService[] = [
       "Accident and structural damage assessment, focused on chassis and undercarriage integrity",
       "A detailed written report after the inspection",
     ],
+    image: "/images/services/pre-purchase-vehicle-inspection.png",
+    imageAlt: "A pre-purchase vehicle inspection in progress",
   },
   {
     slug: "lta-pre-vehicle-inspection",
@@ -113,6 +130,8 @@ export const workshopServices: WorkshopService[] = [
       "Functional checks: brakes, suspension, battery, side-slip test, tyre pressure and condition, undercarriage, horn, lights and indicators",
       "Visual checks: engine and transmission, suspension system, driveshaft boot covers, brake hoses and pipes, cooling system",
     ],
+    image: "/images/services/lta-pre-vehicle-inspection.webp",
+    imageAlt: "A workshop preparing a vehicle for LTA inspection",
   },
   {
     slug: "spray-painting",
@@ -129,6 +148,8 @@ export const workshopServices: WorkshopService[] = [
       "Premium automotive-grade paint application",
       "Custom colour and finish requests",
     ],
+    image: "/images/services/spray-painting.jpg",
+    imageAlt: "A car being spray-painted in a paint booth",
   },
   {
     slug: "aircon-repair-maintenance",
@@ -151,6 +172,8 @@ export const workshopServices: WorkshopService[] = [
       "Strange noises when the system is running",
       "Inconsistent cooling",
     ],
+    image: "/images/services/aircon-repair-maintenance.jpg",
+    imageAlt: "Servicing a car's air-conditioning system",
   },
   {
     slug: "wheel-alignment",
@@ -171,6 +194,8 @@ export const workshopServices: WorkshopService[] = [
       "Loose or unstable-feeling steering",
       "Uneven tyre wear",
     ],
+    image: "/images/services/wheel-alignment.jpg",
+    imageAlt: "A car on a wheel-alignment stand with sensors on its wheels",
   },
   {
     slug: "brake-repair",
@@ -191,6 +216,8 @@ export const workshopServices: WorkshopService[] = [
       "An unresponsive or soft brake pedal (fluid leak or air in the line)",
       "Vibration when braking (warped rotors)",
     ],
+    image: "/images/services/brake-repair.jpg",
+    imageAlt: "A technician servicing a car's brakes",
   },
   {
     slug: "car-battery-service",
@@ -214,6 +241,8 @@ export const workshopServices: WorkshopService[] = [
       "Dimming headlights",
       "A foul smell (possible leak)",
     ],
+    image: "/images/services/car-battery-service.jpeg",
+    imageAlt: "A technician working on a car's 12V battery",
   },
   {
     slug: "vehicle-diagnostic-checks",
@@ -229,6 +258,8 @@ export const workshopServices: WorkshopService[] = [
       "Precise repair recommendations",
       "Preventive maintenance guidance",
     ],
+    image: "/images/services/vehicle-diagnostic-checks.png",
+    imageAlt: "A vehicle diagnostic check in progress",
   },
   {
     slug: "tyres-repair",
@@ -264,6 +295,8 @@ export const workshopServices: WorkshopService[] = [
       "Fleet assessment and consultation",
       "Ongoing performance monitoring with improvement recommendations",
     ],
+    image: "/images/services/fleet-management.png",
+    imageAlt: "A fleet of business vehicles under management",
   },
 ];
 
