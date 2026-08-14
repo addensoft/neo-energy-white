@@ -1,7 +1,15 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Menu, X } from "lucide-react";
+import {
+  BatteryCharging,
+  ChevronDown,
+  ExternalLink,
+  Menu,
+  Wrench,
+  X,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -59,6 +67,16 @@ function NavLink({
   );
 }
 
+/** One icon per known dropdown group heading — purely decorative (`aria-hidden`
+ * on the heading itself covers it), keyed by the exact group label set in
+ * `site-config.ts`. Groups without a match here (there are none today, but a
+ * future one could arrive before its icon does) just render without one. */
+const GROUP_ICONS: Record<string, LucideIcon> = {
+  "Workshop Services": Wrench,
+  "Quick Links": ExternalLink,
+  "EV Battery Services": BatteryCharging,
+};
+
 /** Splits a flat children array into `{ group, links }` buckets, preserving
  * first-appearance order. Ungrouped children (no `group` set — About's own
  * items) land under a single `undefined` bucket, which renders as a plain
@@ -115,21 +133,31 @@ function NavDropdown({ item, active }: { item: NavLinkData; active: boolean }) {
         className={cn(
           "ease-engineered border-border bg-background invisible absolute top-full left-1/2 z-10 mt-3 max-h-[75vh] -translate-x-1/2 translate-y-1 overflow-y-auto rounded-lg border p-2 opacity-0 shadow-[var(--shadow-elevation-md)] transition-all duration-300",
           wide ? "grid w-[42rem] grid-cols-3 gap-1 p-4" : "w-56",
-          "group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100",
+          "group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100",
         )}
       >
-        {groups.map(({ group, links }) => (
-          <div key={group ?? "_"} className={cn(wide && "flex flex-col gap-1")}>
-            {group && (
-              <span className="text-muted block px-3 pt-2 pb-1 font-mono text-[0.65rem] font-semibold tracking-[0.1em] uppercase">
-                {group}
-              </span>
-            )}
-            {links.map((child) => (
-              <DropdownLink key={child.label} child={child} />
-            ))}
-          </div>
-        ))}
+        {groups.map(({ group, links }) => {
+          const GroupIcon = group ? GROUP_ICONS[group] : undefined;
+          return (
+            <div key={group ?? "_"} className={cn(wide && "flex flex-col gap-1")}>
+              {group && (
+                <div className="border-border/70 mb-1.5 flex items-center gap-1.5 border-b px-3 pb-2">
+                  {GroupIcon && (
+                    <span className="ring-ion/20 bg-ion/10 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ring-1">
+                      <GroupIcon className="text-ion h-3 w-3" strokeWidth={2} />
+                    </span>
+                  )}
+                  <span className="text-ion font-mono text-[0.68rem] font-bold tracking-[0.14em] uppercase">
+                    {group}
+                  </span>
+                </div>
+              )}
+              {links.map((child) => (
+                <DropdownLink key={child.label} child={child} />
+              ))}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -163,29 +191,41 @@ function MobileAccordion({
       </button>
       {open && (
         <div className="flex flex-col gap-1 pb-2 pl-4">
-          {groupChildren(item.children ?? []).map(({ group, links }) => (
-            <div key={group ?? "_"}>
-              {group && (
-                <span className="text-muted/80 block pt-2 pb-1 font-mono text-[0.65rem] font-semibold tracking-[0.1em] uppercase">
-                  {group}
-                </span>
-              )}
-              <ul className="flex flex-col gap-1">
-                {links.map((child) => (
-                  <li key={child.label}>
-                    <a
-                      href={child.href}
-                      onClick={onNavigate}
-                      {...(child.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                      className="text-foreground/60 hover:text-foreground ease-engineered block py-2 font-mono text-[0.78rem] tracking-[0.08em] uppercase transition-colors duration-300"
-                    >
-                      {child.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {groupChildren(item.children ?? []).map(({ group, links }) => {
+            const GroupIcon = group ? GROUP_ICONS[group] : undefined;
+            return (
+              <div key={group ?? "_"}>
+                {group && (
+                  <div className="border-border/70 mt-2 flex items-center gap-1.5 border-b pb-1.5">
+                    {GroupIcon && (
+                      <span className="ring-ion/20 bg-ion/10 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ring-1">
+                        <GroupIcon className="text-ion h-3 w-3" strokeWidth={2} />
+                      </span>
+                    )}
+                    <span className="text-ion font-mono text-[0.68rem] font-bold tracking-[0.14em] uppercase">
+                      {group}
+                    </span>
+                  </div>
+                )}
+                <ul className="flex flex-col gap-1">
+                  {links.map((child) => (
+                    <li key={child.label}>
+                      <a
+                        href={child.href}
+                        onClick={onNavigate}
+                        {...(child.external
+                          ? { target: "_blank", rel: "noopener noreferrer" }
+                          : {})}
+                        className="text-foreground/60 hover:text-foreground ease-engineered block py-2 font-mono text-[0.78rem] tracking-[0.08em] uppercase transition-colors duration-300"
+                      >
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
@@ -274,7 +314,9 @@ export function Navbar() {
   useEffect(() => {
     const targets = collectTrackedTargets(primaryNav)
       .map((t) => ({ ...t, el: document.getElementById(t.id) }))
-      .filter((t): t is { id: string; ownerLabel: string; el: HTMLElement } => t.el !== null);
+      .filter(
+        (t): t is { id: string; ownerLabel: string; el: HTMLElement } => t.el !== null,
+      );
     if (targets.length === 0) return;
 
     const observer = new IntersectionObserver(
@@ -350,7 +392,12 @@ export function Navbar() {
         </ul>
 
         <div className="flex items-center gap-3 justify-self-end">
-          <Button href="/#cta" variant="primary" size="sm" className="hidden sm:inline-flex">
+          <Button
+            href="/#cta"
+            variant="primary"
+            size="sm"
+            className="hidden sm:inline-flex"
+          >
             Request Assessment
           </Button>
           <button

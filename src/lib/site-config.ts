@@ -69,15 +69,15 @@ export type NavLink = {
  * that adaptation means); NEO's own 4 EV-specific services stay listed,
  * moved to the bottom of the dropdown rather than removed, per direct
  * instruction ("keep neo already services pages at bottom"). "Quick Links"
- * carries over the real government e-service links from TeamAuto's own
- * menu (Pay Parking Fines, Pay Traffic Fines, Renew Road Tax) — TeamAuto's
- * menu had two near-identical "Pay Parking Fines" entries pointing at the
- * same HDB URL (HDB and URA); the URA one looks like a copy-paste error on
- * the source site, not a distinct real destination, so it wasn't carried
- * over rather than guessing at what URA's own portal URL should be. About
- * gained "Our Gallery" and "FAQ" (also TeamAuto structure, real new pages —
- * see `app/(main)/gallery/page.tsx` and `app/(main)/faq/page.tsx`), added
- * rather than replacing NEO's own existing items.
+ * carries over all four real government e-service links from TeamAuto's
+ * own menu (Pay Parking Fines HDB, Pay Parking Fines URA, Pay Traffic
+ * Fines, Renew Road Tax) — TeamAuto's own HDB and URA entries both point
+ * at the same HDB URL on their site too, kept as-is per direct instruction
+ * to match their menu exactly rather than silently dropping the apparent
+ * duplicate. About gained "Our Gallery" and "FAQ" (also TeamAuto structure,
+ * real new pages — see `app/(main)/gallery/page.tsx` and
+ * `app/(main)/faq/page.tsx`), added rather than replacing NEO's own
+ * existing items.
  */
 export const primaryNav: readonly NavLink[] = [
   { label: "Home", href: "/" },
@@ -98,15 +98,19 @@ export const primaryNav: readonly NavLink[] = [
     label: "Services",
     href: "#",
     children: [
-      ...workshopServices.map(
-        (service): NavChild => ({
-          label: service.title,
-          href: `/services/${service.slug}`,
-          group: "Workshop Services",
-        }),
-      ),
+      ...workshopServices.map((service): NavChild => ({
+        label: service.title,
+        href: `/services/${service.slug}`,
+        group: "Workshop Services",
+      })),
       {
         label: "Pay Parking Fines (HDB)",
+        href: "https://services2.hdb.gov.sg/webapp/BL16AWESVPAYMENT/faces/JSP/eservices/pay/BL16REPayFromESVSearch.jsp",
+        group: "Quick Links",
+        external: true,
+      },
+      {
+        label: "Pay Parking Fines (URA)",
         href: "https://services2.hdb.gov.sg/webapp/BL16AWESVPAYMENT/faces/JSP/eservices/pay/BL16REPayFromESVSearch.jsp",
         group: "Quick Links",
         external: true,
@@ -123,10 +127,26 @@ export const primaryNav: readonly NavLink[] = [
         group: "Quick Links",
         external: true,
       },
-      { label: "Battery Systems", href: "/services/battery-systems", group: "EV Battery Services" },
-      { label: "Component Repair", href: "/services/component-repair", group: "EV Battery Services" },
-      { label: "Maintenance", href: "/services/maintenance", group: "EV Battery Services" },
-      { label: "Diagnostics", href: "/services/diagnostics", group: "EV Battery Services" },
+      {
+        label: "Battery Systems",
+        href: "/services/battery-systems",
+        group: "EV Battery Services",
+      },
+      {
+        label: "Component Repair",
+        href: "/services/component-repair",
+        group: "EV Battery Services",
+      },
+      {
+        label: "Maintenance",
+        href: "/services/maintenance",
+        group: "EV Battery Services",
+      },
+      {
+        label: "Diagnostics",
+        href: "/services/diagnostics",
+        group: "EV Battery Services",
+      },
     ],
   },
   { label: "Career", href: "/career" },
