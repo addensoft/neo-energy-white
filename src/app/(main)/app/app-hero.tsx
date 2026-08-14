@@ -4,10 +4,10 @@ import { Heading, Paragraph } from "@/components/ui";
 import { siteConfig } from "@/lib/site-config";
 
 /**
- * AppHero — same `PageBanner` shell as Contact/About, on the Hero film
- * again. Unlike those two pages, there's no confirmed-real fact to state as
- * a subline yet (no launch date, no store links) — "Coming Soon" is the
- * honest eyebrow, not a claim that the app already exists.
+ * AppHero — same `PageBanner` shell as Contact/About, on the Hero film.
+ * No longer "Coming Soon": the app is a real, live product (TEAM AUTOPRO's
+ * own — NEO Energy's parent business, client-confirmed) available today on
+ * both stores — see `app-download.tsx` for the real listing links.
  */
 export function AppHero() {
   return (
@@ -18,7 +18,7 @@ export function AppHero() {
     >
       <RevealWrapper variant="fade">
         <span className="font-mono text-[0.7rem] font-semibold tracking-[0.32em] text-white/70 uppercase">
-          Coming Soon
+          Available Now
         </span>
       </RevealWrapper>
 
@@ -30,9 +30,8 @@ export function AppHero() {
 
       <RevealWrapper variant="fade" delay={0.3}>
         <Paragraph size="body" className="max-w-xl text-balance text-white/80">
-          One app for every battery interaction — book an assessment, track
-          your service history, and reach the engineers working on your fleet
-          directly.
+          Book your appointment, track discounts and warranty, and keep on
+          top of your road tax — all from your phone.
         </Paragraph>
       </RevealWrapper>
     </PageBanner>

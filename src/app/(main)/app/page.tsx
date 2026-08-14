@@ -8,15 +8,16 @@ import { AppShowcase } from "./app-showcase";
 
 export const metadata: Metadata = {
   title: "App",
-  description: `The ${siteConfig.name} app is coming soon to iOS and Android — book battery assessments, track service history, and message your engineer directly.`,
+  description: `The ${siteConfig.name} app is live on iOS and Android — book appointments, track discounts, warranty, and road tax renewal.`,
 };
 
 /**
- * /app — the site's fourth real page. No app has actually shipped yet (no
- * store listing, no confirmed launch date — see `app-download.tsx`), so
- * this is deliberately a "coming soon" page: real, honest "what's ahead"
- * content, styled to the same standard as Contact/About, rather than
- * claiming a live product that doesn't exist.
+ * /app — rebuilt from TEAM AUTOPRO's own "Our App" page (NEO Energy's
+ * parent business, client-confirmed) per direct instruction: real app,
+ * real store links, real screenshot, real feature list — see
+ * `app-download.tsx` and `app-showcase.tsx` for exactly what's real vs.
+ * still adapted. No longer the "coming soon" placeholder this page used to
+ * be, since the app it's describing genuinely exists and ships today.
  */
 export default function AppPage() {
   return (
