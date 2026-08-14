@@ -6,10 +6,16 @@ import { Button, Heading, Paragraph } from "@/components/ui";
 import { siteConfig } from "@/lib/site-config";
 
 /**
- * CareerCta — closes the page on the same Earth banner About and the
- * homepage both end on (see `about-cta.tsx` for why: no scrim, white type
- * relying on the photo's own dark upper-left starfield, per direct client
- * feedback on the homepage version).
+ * CareerCta — "Ready To Apply?", matching TEAM AUTOPRO's own "Join Us" page
+ * verbatim (NEO Energy's parent business, client-confirmed): heading and
+ * body text are their exact wording, per direct instruction. Their page
+ * also states a physical interview location and address (160 Sin Ming Dr
+ * #02-12, Sin Ming AutoCity) — kept out of this version since this project
+ * has no confirmed NEO-specific address (see `contact-map.tsx`'s own
+ * discipline on this), unlike the promo page's redemption clause which the
+ * client explicitly asked to keep as-is; worth confirming with the client
+ * whether interviews for NEO roles happen at that same address before
+ * adding it back.
  *
  * Two ways to apply, not one: `mailto:` hands off to the visitor's own email
  * client with the subject pre-filled, same "no backend" mechanism
@@ -44,14 +50,13 @@ export function CareerCta() {
       <div className="px-gutter lg:px-gutter-lg relative z-10 flex h-full min-h-[42vh] flex-col justify-center gap-6 py-16 lg:min-h-[54vh] lg:max-w-[50vw] lg:py-0">
         <RevealWrapper variant="blur" duration={1}>
           <Heading as="h2" size="h2" className="text-white uppercase">
-            Ready To Build The Future With <span className="text-ion">Us?</span>
+            Ready To <span className="text-ion">Apply?</span>
           </Heading>
         </RevealWrapper>
 
         <RevealWrapper variant="fade" delay={0.15}>
           <Paragraph size="body" className="max-w-md text-balance text-white/80">
-            Send us your resume and where you&apos;d like to work — a real
-            person on the team will read it.
+            Reach out via phone or email — we&apos;d love to hear from you.
           </Paragraph>
         </RevealWrapper>
 
