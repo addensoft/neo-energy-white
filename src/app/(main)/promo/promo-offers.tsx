@@ -103,47 +103,67 @@ export function PromoOffers() {
 
   return (
     <>
-      {/* 1. Engine Protection banner */}
-      <section className="bg-void relative overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/services/aircon-repair-maintenance.jpg"
-            alt=""
-            fill
-            sizes="100vw"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/30" />
-        </div>
+      {/* 1. Engine Protection banner — a contained card (rounded, bordered,
+          inset within the page), not another edge-to-edge dark photo
+          section. PromoHero right above this is already a full-bleed dark
+          video banner; repeating that exact treatment immediately below it
+          read as one flat, undifferentiated block. This is the same
+          contained-card language the rest of the site already uses for
+          photo-backed CTAs (see `EarthCta`), so the page gets a real light/
+          dark rhythm: light hero-adjacent space → dark card → light section
+          → cards. */}
+      <section className="bg-void relative py-16 lg:py-24">
+        <Container className="relative z-10">
+          <RevealWrapper variant="blur" duration={0.9}>
+            <div className="border-border relative overflow-hidden rounded-[22px] border shadow-[0_24px_60px_-24px_rgba(15,23,42,0.28)]">
+              <div className="absolute inset-0">
+                <Image
+                  src="/images/services/aircon-repair-maintenance.jpg"
+                  alt=""
+                  fill
+                  sizes="(min-width: 1600px) 1600px, 100vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/30" />
+              </div>
 
-        <Container className="relative z-10 flex flex-col items-start gap-5 py-20 lg:py-28">
-          <RevealWrapper variant="fade">
-            <span className="border-ion text-ion flex w-fit items-center gap-2 rounded-full border px-4 py-1.5 font-mono text-xs font-semibold tracking-[0.08em] uppercase">
-              <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2} />
-              10 Year Warranty
-            </span>
-          </RevealWrapper>
+              <div className="relative z-10 flex flex-col items-start gap-5 p-6 sm:p-10 lg:p-14">
+                <RevealWrapper variant="fade">
+                  <span className="border-ion text-ion flex w-fit items-center gap-2 rounded-full border px-4 py-1.5 font-mono text-xs font-semibold tracking-[0.08em] uppercase">
+                    <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2} />
+                    10 Year Warranty
+                  </span>
+                </RevealWrapper>
 
-          <RevealWrapper variant="blur" delay={0.1} duration={1}>
-            <Heading as="h2" size="h2" className="max-w-2xl text-white uppercase">
-              10 Year
-              <br />
-              <span className="text-ion">Engine</span> Protection
-            </Heading>
-          </RevealWrapper>
+                <RevealWrapper variant="blur" delay={0.1} duration={1}>
+                  <Heading as="h2" size="h2" className="max-w-2xl text-white uppercase">
+                    10 Year
+                    <br />
+                    <span className="text-ion">Engine</span> Protection
+                  </Heading>
+                </RevealWrapper>
 
-          <RevealWrapper variant="fade" delay={0.2}>
-            <Paragraph size="body" className="max-w-lg text-balance text-white/80">
-              Uncompromising reliability for the ultimate driving machine. Our
-              Kinetic Atelier Protection Program ensures your performance
-              heart stays pristine for a decade.
-            </Paragraph>
-          </RevealWrapper>
+                <RevealWrapper variant="fade" delay={0.2}>
+                  <Paragraph size="body" className="max-w-lg text-balance text-white/80">
+                    Uncompromising reliability for the ultimate driving
+                    machine. Our Kinetic Atelier Protection Program ensures
+                    your performance heart stays pristine for a decade.
+                  </Paragraph>
+                </RevealWrapper>
 
-          <RevealWrapper variant="fade" delay={0.3}>
-            <Button href={whatsappHref} target="_blank" rel="noopener noreferrer" variant="primary">
-              Enquire Now!
-            </Button>
+                <RevealWrapper variant="fade" delay={0.3}>
+                  <Button
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="primary"
+                    className="border-white bg-transparent text-white"
+                  >
+                    Enquire Now!
+                  </Button>
+                </RevealWrapper>
+              </div>
+            </div>
           </RevealWrapper>
         </Container>
       </section>
