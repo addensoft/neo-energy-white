@@ -18,7 +18,7 @@ const FACTS: { label: string; value: string }[] = [
     label: "Positioning",
     value: "Singapore's authorised EV battery engineering & repair specialist",
   },
-  { label: "Authorised Partners", value: "CATL · CALB · BYD" },
+  { label: "Authorised Partners", value: "CATL · CALB" },
   { label: "Certification Standard", value: "GB 38031-2020" },
   { label: "Service Area", value: "Islandwide, Singapore" },
   { label: "Direct Contact", value: siteConfig.whatsappDisplay },

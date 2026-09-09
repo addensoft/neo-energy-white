@@ -46,7 +46,7 @@ export const newsArticles: NewsArticle[] = [
     imageAlt: "NEO ENERGY's flagship EV battery pack",
     body: [
       "NEO ENERGY's website has a new home — rebuilt from the ground up around the same engineering precision the team brings to every battery it touches.",
-      "The new site brings together everything NEO ENERGY does in one place: the flagship battery systems supplied and engineered in partnership with CATL, CALB, and BYD; the component-level diagnostics and repair work that sets the team apart from generalist workshops; and direct ways to reach the engineers themselves, whether that's a WhatsApp message, an email, or a full enquiry form.",
+      "The new site brings together everything NEO ENERGY does in one place: the flagship battery systems supplied and engineered in partnership with CATL and CALB; the component-level diagnostics and repair work that sets the team apart from generalist workshops; and direct ways to reach the engineers themselves, whether that's a WhatsApp message, an email, or a full enquiry form.",
       "It also introduces dedicated pages that didn't exist before — a Careers page for anyone interested in joining the team, a Promotions page for current offers, and this News & Insights section, where the team will share updates and write about the engineering standards behind the work.",
       "Nothing about how NEO ENERGY works has changed — this is the same authorised team, the same standards, the same direct access. The website just finally looks and feels like it.",
     ],

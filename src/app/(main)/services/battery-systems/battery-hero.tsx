@@ -30,7 +30,7 @@ export function BatteryHero() {
       <RevealWrapper variant="fade" delay={0.3}>
         <Paragraph size="body" className="max-w-xl text-balance text-white/80">
           The same flagship 77.94kWh pack we supply, engineer, and service —
-          authorised across CATL, CALB, and BYD battery technologies.
+          authorised across CATL and CALB battery technologies.
         </Paragraph>
       </RevealWrapper>
     </PageBanner>

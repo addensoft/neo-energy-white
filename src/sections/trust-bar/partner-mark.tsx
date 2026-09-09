@@ -6,17 +6,15 @@ import { cn } from "@/lib/utils";
  * A partner logo, rendered as a CSS mask over a solid colour rather than as
  * an <img>. The official files (public/logos/, sourced from Wikimedia
  * Commons' brand-logo library) each carry their own brand colour — CATL
- * navy, BYD red, Mazda black — and masking normalises all of them to one
- * muted monochrome ink, which is what keeps the strip reading as a single
- * premium showcase instead of a patchwork of brand palettes. It also makes
- * the hover state trivial: the mask's background-color simply transitions
- * to Ion Blue.
+ * navy, CALB blue — and masking normalises both to one muted monochrome
+ * ink, which is what keeps the strip reading as a single premium showcase
+ * instead of a patchwork of brand palettes. It also makes the hover state
+ * trivial: the mask's background-color simply transitions to Ion Blue.
  *
  * `aspect` (the file's own width/height) plus a per-logo height class is
  * what implements "consistent visual height, optical alignment, no equal-
  * width stretching": every logo derives its width from its true aspect
- * ratio, and emblem-bearing marks (NIO, Mazda) get a taller height than
- * plain wordmarks so their type sits at a comparable optical size.
+ * ratio, sized so both wordmarks sit at a comparable optical size.
  */
 type PartnerMarkProps = {
   name: string;

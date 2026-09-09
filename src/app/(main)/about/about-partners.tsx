@@ -18,18 +18,12 @@ import { PartnerMark } from "@/sections/trust-bar/partner-mark";
  * see the "Functions cannot be passed directly to Client Components" error
  * this threw before this directive was added.
  */
+// BYD, NIO, and Mazda were removed per direct instruction — CATL and CALB
+// only, matching the Trust Bar and every other partner-marks instance
+// sitewide (see `sections/trust-bar/index.tsx`).
 const PARTNERS = [
   { name: "CATL", src: "/logos/catl.svg", aspect: 1024 / 216, sizeClassName: "h-6 lg:h-7" },
   { name: "CALB", src: "/logos/calb.png", aspect: 1660 / 300, sizeClassName: "h-6 lg:h-7" },
-  { name: "BYD", src: "/logos/byd.svg", aspect: 1920 / 480, sizeClassName: "h-5 lg:h-6" },
-  { name: "NIO", src: "/logos/nio.svg", aspect: 2500 / 931, sizeClassName: "h-9 lg:h-10" },
-  {
-    name: "Mazda",
-    src: "/logos/mazda.svg",
-    aspect: 2489.78 / 601.44,
-    sizeClassName: "h-7 lg:h-8",
-    suffix: "(TBC)",
-  },
 ] as const;
 
 export function AboutPartners() {
@@ -55,7 +49,6 @@ export function AboutPartners() {
                 src={partner.src}
                 aspect={partner.aspect}
                 sizeClassName={partner.sizeClassName}
-                suffix={"suffix" in partner ? partner.suffix : undefined}
                 innerRef={() => {}}
               />
             </RevealWrapper>

@@ -10,12 +10,13 @@ import { PartnerMark } from "./partner-mark";
 import { useTrustBarReveal } from "./use-trust-bar-reveal";
 
 // Official brand assets (public/logos/, via Wikimedia Commons' brand-logo
-// library — CALB only exists there as a transparent PNG; the rest are SVG).
+// library — CALB only exists there as a transparent PNG; CATL is SVG).
 // `aspect` is each file's intrinsic width/height; heights are tuned per logo
-// for optical balance: plain wordmarks share one cap height, while NIO
-// (emblem stacked above the word) and Mazda (winged emblem beside it) run
-// taller so their type reads at a comparable size. See partner-mark.tsx for
-// why widths must never be equalised.
+// for optical balance so both wordmarks share one cap height. BYD, NIO, and
+// Mazda were removed from this strip per direct instruction — CATL and CALB
+// only now, which also matches the "Direct Agent of the Top 2" claim below
+// exactly (it was always about these two, not the extra logos shown
+// alongside them).
 const PARTNERS = [
   {
     name: "CATL",
@@ -28,25 +29,6 @@ const PARTNERS = [
     src: "/logos/calb.png",
     aspect: 1660 / 300,
     sizeClassName: "h-[22px] lg:h-[26px]",
-  },
-  {
-    name: "BYD",
-    src: "/logos/byd.svg",
-    aspect: 1920 / 480,
-    sizeClassName: "h-[20px] lg:h-[24px]",
-  },
-  {
-    name: "NIO",
-    src: "/logos/nio.svg",
-    aspect: 2500 / 931,
-    sizeClassName: "h-[34px] lg:h-[40px]",
-  },
-  {
-    name: "Mazda",
-    src: "/logos/mazda.svg",
-    aspect: 2489.78 / 601.44,
-    sizeClassName: "h-[26px] lg:h-[30px]",
-    suffix: "(TBC)",
   },
 ] as const;
 
@@ -124,9 +106,16 @@ export function TrustBar() {
           </span>
         </div>
 
-        {/* Center — partner marks, horizontally swipeable on mobile */}
+        {/* Center — partner marks, horizontally swipeable on mobile.
+            `justify-center` (not `justify-between`): with only CATL and CALB
+            left in `PARTNERS`, `justify-between` on a `w-full` flex container
+            shoved the two logos to opposite edges with a wide dead gap
+            between them — a layout that only worked with the original five
+            marks. Centered with a generous gap instead, so two logos read as
+            a deliberate, balanced pairing rather than leftover spacing from
+            a bigger row. */}
         <div
-          className="flex w-full items-center gap-x-12 overflow-x-auto px-1 py-1 [-webkit-overflow-scrolling:touch] lg:justify-between lg:gap-x-10 lg:overflow-visible lg:px-0 [&::-webkit-scrollbar]:hidden"
+          className="flex w-full items-center justify-center gap-x-14 overflow-x-auto px-1 py-1 [-webkit-overflow-scrolling:touch] lg:gap-x-20 lg:overflow-visible lg:px-0 [&::-webkit-scrollbar]:hidden"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {PARTNERS.map((partner, index) => (
@@ -136,7 +125,6 @@ export function TrustBar() {
               src={partner.src}
               aspect={partner.aspect}
               sizeClassName={partner.sizeClassName}
-              suffix={"suffix" in partner ? partner.suffix : undefined}
               innerRef={(el) => {
                 if (el) logosRef.current[index] = el;
               }}

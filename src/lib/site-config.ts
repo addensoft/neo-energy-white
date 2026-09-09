@@ -13,7 +13,7 @@ export const siteConfig = {
   // repair workshop — component-level repair is one differentiator among several,
   // not the brand's core identity. Keep future copy framed accordingly.
   description:
-    "Singapore's leading EV battery engineering and technology company — authorised partner across CATL, CALB, and BYD battery technologies.",
+    "Singapore's leading EV battery engineering and technology company — authorised partner across CATL and CALB battery technologies.",
   /** Client-confirmed production domain. Feeds `metadataBase`, the Open
    * Graph URL, `sitemap.xml` and `robots.txt`. */
   url: "https://neoenergybatt.com",

@@ -21,7 +21,7 @@ const PILLARS: { icon: LucideIcon; title: string; description: string }[] = [
     icon: Layers,
     title: "EV & Hybrid Battery Systems",
     description:
-      "Supply and engineering across EV and hybrid battery technologies, authorised by CATL, CALB, and BYD.",
+      "Supply and engineering across EV and hybrid battery technologies, authorised by CATL and CALB.",
   },
   {
     icon: CircuitBoard,

@@ -11,7 +11,7 @@ import { BatterySpecs } from "./battery-specs";
 
 export const metadata: Metadata = {
   title: "Battery Systems",
-  description: `${siteConfig.name}'s flagship 77.94kWh EV battery pack — supply and engineering authorised across CATL, CALB, and BYD battery technologies.`,
+  description: `${siteConfig.name}'s flagship 77.94kWh EV battery pack — supply and engineering authorised across CATL and CALB battery technologies.`,
 };
 
 /**
