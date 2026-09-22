@@ -1,13 +1,13 @@
 import { PageBanner } from "@/components/page-banner";
 import { RevealWrapper } from "@/components/motion/reveal-wrapper";
-import { Heading, Paragraph } from "@/components/ui";
+import { Heading } from "@/components/ui";
 
 /**
  * PromoHero — same `PageBanner` shell as Contact/App, on the Hero film. The
  * offers themselves (copy, terms, countdown) live in `promo-offers.tsx`
  * below — this banner stays a general section announcement rather than
  * duplicating their specifics, so the two never drift out of sync as offers
- * change.
+ * change. No subline under the title — removed per direct instruction.
  */
 export function PromoHero() {
   return (
@@ -26,13 +26,6 @@ export function PromoHero() {
         <Heading as="h1" size="h2" className="text-white uppercase">
           Promotions
         </Heading>
-      </RevealWrapper>
-
-      <RevealWrapper variant="fade" delay={0.3}>
-        <Paragraph size="body" className="max-w-xl text-balance text-white/80">
-          A limited-time servicing bundle, plus what Premier and Prestige
-          membership actually gets you — live now.
-        </Paragraph>
       </RevealWrapper>
     </PageBanner>
   );
