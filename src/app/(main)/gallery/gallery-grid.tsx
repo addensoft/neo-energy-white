@@ -8,24 +8,18 @@ import { Container } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 /**
- * GalleryGrid — three tabs, "All" / "Charity" / "Work", matching
- * teamauto.sg's own gallery order (their "All / Charity / Our Work" filter)
- * per direct instruction.
+ * GalleryGrid — three tabs, "All" / "CALB Training" / "Work".
  *
  * Work: the flagship battery-pack film's own frames (`public/hero-frames`,
  * shot for the Hero section, unused since it moved from scroll-scrubbed
  * canvas to a looping video — repurposed here instead of left dead) plus
  * NEO's real product/detail photography.
  *
- * Charity: real photos from TEAM AUTOPRO's own community events (NEO
- * Energy's parent business, client-confirmed) — genuine event photos, not
- * stock; several still carry their original iPhone EXIF data. TeamAuto's
- * live charity gallery has 100+ images across several distinct events; this
- * is a curated spread across all of them (Nov/Dec 2022, Jun/Jul 2025, an
- * April 2024 Tampines event, Feb 2026), not the full raw dump — importing
- * every single one would mostly be near-duplicate crowd shots from the same
- * events, at a cost to both page performance and how curated the rest of
- * this site is.
+ * CALB Training: real photos from NEO Energy's own CALB overseas power
+ * battery repair technical training session — the "Charity" tab (TeamAuto's
+ * community-event photos) was removed per direct instruction and replaced
+ * with these, since they're NEO's own team at NEO's own real event, not a
+ * parent business's.
  */
 const WORK_IMAGES = [
   { src: "/images/why-choose-engineering.webp", alt: "NEO ENERGY engineering detail" },
@@ -42,32 +36,30 @@ const WORK_IMAGES = [
   { src: "/hero-frames/frame-0340.webp", alt: "NEO ENERGY flagship battery pack, film still" },
 ] as const;
 
-const CHARITY_IMAGES = [
-  { src: "/images/gallery/charity/charity-01.jpg", alt: "Community event with volunteers and elderly residents" },
-  { src: "/images/gallery/charity/charity-02.jpg", alt: "Volunteers at a community charity event" },
-  { src: "/images/gallery/charity/charity-03.jpg", alt: "Community charity event activities" },
-  { src: "/images/gallery/charity/charity-04.jpg", alt: "Volunteers and residents at a Tampines charity event" },
-  { src: "/images/gallery/charity/charity-05.jpeg", alt: "Team members at a community outreach event" },
-  { src: "/images/gallery/charity/charity-06.jpeg", alt: "Community outreach event" },
-  { src: "/images/gallery/charity/charity-07.jpeg", alt: "Team volunteering at a community event" },
-  { src: "/images/gallery/charity/charity-08.jpeg", alt: "Community charity drive" },
-  { src: "/images/gallery/charity/charity-09.jpeg", alt: "Volunteers at a charity outreach event" },
-  { src: "/images/gallery/charity/charity-10.jpg", alt: "Community event" },
-  { src: "/images/gallery/charity/charity-11.jpg", alt: "Volunteers at a community event" },
-  { src: "/images/gallery/charity/charity-12.jpg", alt: "Community charity event" },
-  { src: "/images/gallery/charity/charity-13.jpg", alt: "Community outreach activities" },
-  { src: "/images/gallery/charity/charity-14.jpg", alt: "Volunteers at a community event" },
-  { src: "/images/gallery/charity/charity-15.jpg", alt: "Community charity event" },
-  { src: "/images/gallery/charity/charity-16.jpeg", alt: "Community outreach event" },
-  { src: "/images/gallery/charity/charity-17.jpeg", alt: "Volunteers at a community event" },
-  { src: "/images/gallery/charity/charity-18.jpeg", alt: "Community charity event" },
+const CALB_TRAINING_IMAGES = [
+  {
+    src: "/images/gallery/calb-training/calb-training-01.jpeg",
+    alt: "NEO ENERGY team receiving certificates at the CALB Overseas Power Battery Technology Training",
+  },
+  {
+    src: "/images/gallery/calb-training/calb-training-02.jpeg",
+    alt: "NEO ENERGY team at the CALB power battery technical training venue",
+  },
+  {
+    src: "/images/gallery/calb-training/calb-training-03.jpeg",
+    alt: "NEO ENERGY team group photo at the CALB power battery technical training venue",
+  },
+  {
+    src: "/images/gallery/calb-training/calb-training-04.jpeg",
+    alt: "NEO ENERGY team with CALB trainers at the CALB power battery repair technical training",
+  },
 ] as const;
 
-const ALL_IMAGES = [...CHARITY_IMAGES, ...WORK_IMAGES];
+const ALL_IMAGES = [...CALB_TRAINING_IMAGES, ...WORK_IMAGES];
 
 const TABS = [
   { id: "all", label: "All", images: ALL_IMAGES },
-  { id: "charity", label: "Charity", images: CHARITY_IMAGES },
+  { id: "calb-training", label: "CALB Training", images: CALB_TRAINING_IMAGES },
   { id: "work", label: "Work", images: WORK_IMAGES },
 ] as const;
 
