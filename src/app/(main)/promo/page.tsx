@@ -3,29 +3,27 @@ import type { Metadata } from "next";
 import { siteConfig } from "@/lib/site-config";
 
 import { PromoHero } from "./promo-hero";
-import { PromoOffers } from "./promo-offers";
-import { PromoSubscribe } from "./promo-subscribe";
 
 export const metadata: Metadata = {
   title: "Promotions",
-  description: `Current promotions from ${siteConfig.name} — a 10-Year Engine Protection Plan bundle, plus Premier, Prestige, and Prestige+ membership.`,
+  description: `Current promotions from ${siteConfig.name} — coming soon.`,
+  robots: { index: false, follow: true },
 };
 
 /**
- * /promo — the site's sixth real page, following the same pattern Contact/
- * About/App/Career established: `PageBanner` for the cinematic banner, plain
- * content sections below, global Navbar/Footer from the `(main)` layout.
- *
- * `PromoOffers` holds the featured bundle and the membership tiers — see
- * that file's own comment for where this content actually comes from
- * (TEAM AUTOPRO's live promotion page, adapted).
+ * /promo — temporarily hidden per direct instruction: only the `PageBanner`
+ * hero renders; everything after it (`PromoOffers`' featured bundle and
+ * membership tiers, `PromoSubscribe`'s closing CTA) is switched off, not
+ * deleted, so the real content comes straight back by re-adding those two
+ * lines below once this is ready to go live again. `robots: noindex` while
+ * it's in this half-built state, same reasoning `/under-construction` uses.
  */
 export default function PromoPage() {
   return (
     <>
       <PromoHero />
-      <PromoOffers />
-      <PromoSubscribe />
+      {/* <PromoOffers /> */}
+      {/* <PromoSubscribe /> */}
     </>
   );
 }
