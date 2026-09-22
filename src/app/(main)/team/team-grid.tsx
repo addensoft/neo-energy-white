@@ -24,33 +24,33 @@ import { siteConfig } from "@/lib/site-config";
  */
 const TEAM = [
   {
-    name: "Marcus Tan",
+    name: "Alex Zhang",
     title: "Founder & Managing Director",
     focus: "Sets the engineering standard every repair is held to.",
   },
   {
-    name: "Wei Ling Ong",
-    title: "Lead Battery Engineer",
+    name: "KC Ko",
+    title: "Director",
     focus: "Cell-level diagnostics and thermal management systems.",
   },
   {
-    name: "Rajesh Kumar",
-    title: "Diagnostics & Testing Specialist",
+    name: "Charles Hoon",
+    title: "Director",
     focus: "Verifies every repair against GB 38031-2020 tolerances.",
   },
   {
-    name: "Sarah Lim",
-    title: "Component Repair Technician",
+    name: "David Chang",
+    title: "General Manager",
     focus: "Cell, busbar, and BMS-level repair work on the bench.",
   },
   {
-    name: "Daniel Ng",
-    title: "Client Relations Manager",
+    name: "Alvin Chow",
+    title: "Manager",
     focus: "The first call for fleet, dealership, and corporate accounts.",
   },
   {
-    name: "Priya Nair",
-    title: "Operations Manager",
+    name: "Yu Mei Li",
+    title: "Admin",
     focus: "Keeps islandwide assessments and servicing on schedule.",
   },
 ] as const;
