@@ -9,11 +9,19 @@ import { Container } from "@/components/ui";
 import { type Certificate } from "@/lib/certificates";
 
 /**
- * CertificateGrid — a 4-per-row grid (down to 2 on mobile) of real
- * credential scans, each opening a full-screen lightbox on click. The
- * lightbox tracks the clicked index and supports Left/Right arrow-key and
- * on-screen-arrow navigation through every certificate, wrapping at both
- * ends, plus Escape/backdrop-click/✕ to close.
+ * CertificateGrid — certificates grouped into their own section by issuer
+ * (CALB, then CATL, then Ngee Ann Polytechnic, per `@/lib/certificates.ts`'s
+ * order), each section a 4-per-row grid (down to 2 on mobile) that starts
+ * on a fresh row — so a single-certificate issuer like CATL sits alone
+ * rather than sharing a row with the next issuer's certificates. Grouping
+ * assumes same-issuer certificates are already adjacent in the source
+ * array, which is how that file is maintained.
+ *
+ * Every certificate opens a full-screen lightbox on click. The lightbox
+ * tracks the clicked certificate's index into the full flat list (not the
+ * section), so Left/Right navigation and the "X / total" counter move
+ * across every certificate regardless of which section it's in, wrapping
+ * at both ends, plus Escape/backdrop-click/✕ to close.
  *
  * `object-contain` (not `object-cover`) in both the grid tiles and the
  * lightbox — these are scanned documents, not photos: cropping into one
@@ -55,42 +63,62 @@ export function CertificateGrid({ certificates }: { certificates: Certificate[] 
 
   const active = activeIndex === null ? null : certificates[activeIndex];
 
+  const sections: { issuer: string; items: { certificate: Certificate; index: number }[] }[] = [];
+  certificates.forEach((certificate, index) => {
+    const currentSection = sections[sections.length - 1];
+    if (currentSection && currentSection.issuer === certificate.issuer) {
+      currentSection.items.push({ certificate, index });
+    } else {
+      sections.push({ issuer: certificate.issuer, items: [{ certificate, index }] });
+    }
+  });
+
   return (
     <section className="bg-void relative py-16 lg:py-24">
-      <Container className="relative z-10">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-5">
-          {certificates.map((certificate, index) => (
-            <RevealWrapper key={certificate.src} variant="fade" delay={(index % 4) * 0.06}>
-              <button
-                type="button"
-                onClick={() => setActiveIndex(index)}
-                aria-label={`View certificate: ${certificate.name}, ${certificate.issuer}`}
-                className="group border-border bg-background ease-engineered hover:border-ion/50 flex h-full w-full flex-col overflow-hidden rounded-md border text-left transition-colors duration-300"
-              >
-                <div className="bg-graphite-light relative aspect-[4/3] w-full overflow-hidden">
-                  <Image
-                    src={certificate.src}
-                    alt={`Certificate — ${certificate.name}, ${certificate.issuer}`}
-                    fill
-                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-                    className="object-contain p-3"
-                  />
-                  <div className="ease-engineered pointer-events-none absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/40 group-hover:opacity-100">
-                    <ZoomIn className="h-6 w-6 text-white" strokeWidth={1.5} />
-                  </div>
-                </div>
-                <div className="border-border flex flex-col gap-0.5 border-t px-4 py-3">
-                  <span className="font-display text-foreground text-sm font-semibold">
-                    {certificate.name}
-                  </span>
-                  <span className="text-ion font-mono text-[0.65rem] tracking-[0.08em] uppercase">
-                    {certificate.issuer}
-                  </span>
-                </div>
-              </button>
-            </RevealWrapper>
-          ))}
-        </div>
+      <Container className="relative z-10 flex flex-col gap-10 lg:gap-14">
+        {sections.map((sectionGroup) => (
+          <div key={`${sectionGroup.issuer}-${sectionGroup.items[0].index}`} className="flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-ion font-mono text-xs font-semibold tracking-[0.08em] uppercase">
+                {sectionGroup.issuer}
+              </span>
+              <span className="bg-border h-px flex-1" />
+            </div>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-5">
+              {sectionGroup.items.map(({ certificate, index }) => (
+                <RevealWrapper key={certificate.src} variant="fade" delay={(index % 4) * 0.06}>
+                  <button
+                    type="button"
+                    onClick={() => setActiveIndex(index)}
+                    aria-label={`View certificate: ${certificate.name}, ${certificate.issuer}`}
+                    className="group border-border bg-background ease-engineered hover:border-ion/50 flex h-full w-full flex-col overflow-hidden rounded-md border text-left transition-colors duration-300"
+                  >
+                    <div className="bg-graphite-light relative aspect-[4/3] w-full overflow-hidden">
+                      <Image
+                        src={certificate.src}
+                        alt={`Certificate — ${certificate.name}, ${certificate.issuer}`}
+                        fill
+                        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                        className="object-contain p-3"
+                      />
+                      <div className="ease-engineered pointer-events-none absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/40 group-hover:opacity-100">
+                        <ZoomIn className="h-6 w-6 text-white" strokeWidth={1.5} />
+                      </div>
+                    </div>
+                    <div className="border-border flex flex-col gap-0.5 border-t px-4 py-3">
+                      <span className="font-display text-foreground text-sm font-semibold">
+                        {certificate.name}
+                      </span>
+                      <span className="text-ion font-mono text-[0.65rem] tracking-[0.08em] uppercase">
+                        {certificate.issuer}
+                      </span>
+                    </div>
+                  </button>
+                </RevealWrapper>
+              ))}
+            </div>
+          </div>
+        ))}
       </Container>
 
       {active && (
