@@ -57,11 +57,11 @@ export function PromoBrochures({ brochures }: { brochures: PromoBrochure[] }) {
   }, [activeIndex, close, showPrev, showNext]);
 
   const active = activeIndex === null ? null : brochures[activeIndex];
-  const whatsappHref = active
-    ? `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(
-        `Hi ${siteConfig.name}, I'd like to enquire about "${active.title}".`,
-      )}`
-    : "";
+
+  const whatsappHrefFor = (brochure: PromoBrochure) =>
+    `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(
+      `Hi ${siteConfig.name}, I'd like to enquire about "${brochure.title}".`,
+    )}`;
 
   return (
     <section className="bg-void relative py-16 lg:py-24">
@@ -77,16 +77,22 @@ export function PromoBrochures({ brochures }: { brochures: PromoBrochure[] }) {
           </RevealWrapper>
         </div>
 
-        <div className="mx-auto grid w-full max-w-3xl grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="mx-auto grid w-[90%] grid-cols-1 gap-6 sm:grid-cols-2">
           {brochures.map((brochure, index) => (
-            <RevealWrapper key={brochure.src} variant="blur" delay={index * 0.1} duration={0.7}>
-              <button
-                type="button"
-                onClick={() => setActiveIndex(index)}
-                aria-label={`View brochure: ${brochure.title}`}
-                className="group border-border bg-background ease-engineered hover:border-ion/50 flex h-full w-full flex-col overflow-hidden rounded-md border text-left transition-colors duration-300"
-              >
-                <div className="bg-graphite-light relative aspect-[3/4] w-full overflow-hidden">
+            <RevealWrapper
+              key={brochure.src}
+              variant="blur"
+              delay={index * 0.1}
+              duration={0.7}
+              className="h-full"
+            >
+              <div className="group border-border bg-background ease-engineered hover:border-ion/50 flex h-full flex-col overflow-hidden rounded-md border transition-colors duration-300">
+                <button
+                  type="button"
+                  onClick={() => setActiveIndex(index)}
+                  aria-label={`View brochure: ${brochure.title}`}
+                  className="bg-graphite-light relative aspect-[3/4] w-full overflow-hidden"
+                >
                   <Image
                     src={brochure.src}
                     alt={brochure.title}
@@ -97,16 +103,28 @@ export function PromoBrochures({ brochures }: { brochures: PromoBrochure[] }) {
                   <div className="ease-engineered pointer-events-none absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/40 group-hover:opacity-100">
                     <ZoomIn className="h-7 w-7 text-white" strokeWidth={1.5} />
                   </div>
+                </button>
+                <div className="border-border flex flex-1 flex-col gap-3 border-t px-5 py-4">
+                  <div className="flex flex-col gap-1">
+                    <span className="font-display text-foreground text-base font-semibold">
+                      {brochure.title}
+                    </span>
+                    <span className="font-body text-muted text-sm leading-relaxed">
+                      {brochure.summary}
+                    </span>
+                  </div>
+                  <Button
+                    href={whatsappHrefFor(brochure)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="primary"
+                    className="mt-auto w-full"
+                  >
+                    <WhatsAppIcon className="h-4 w-4" />
+                    Enquire Via WhatsApp
+                  </Button>
                 </div>
-                <div className="border-border flex flex-col gap-1 border-t px-5 py-4">
-                  <span className="font-display text-foreground text-base font-semibold">
-                    {brochure.title}
-                  </span>
-                  <span className="font-body text-muted text-sm leading-relaxed">
-                    {brochure.summary}
-                  </span>
-                </div>
-              </button>
+              </div>
             </RevealWrapper>
           ))}
         </div>
@@ -178,7 +196,12 @@ export function PromoBrochures({ brochures }: { brochures: PromoBrochure[] }) {
             <span className="mb-1 font-mono text-[0.7rem] tracking-[0.08em] text-white/50 uppercase">
               {(activeIndex ?? 0) + 1} / {brochures.length}
             </span>
-            <Button href={whatsappHref} target="_blank" rel="noopener noreferrer" variant="primary">
+            <Button
+              href={whatsappHrefFor(active)}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="primary"
+            >
               <WhatsAppIcon className="h-4 w-4" />
               Enquire Via WhatsApp
             </Button>
