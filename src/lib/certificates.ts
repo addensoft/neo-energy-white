@@ -12,11 +12,33 @@ export type Certificate = {
   src: string;
 };
 
+// Ordered by issuer — CALB, then CATL, then Ngee Ann Polytechnic — per direct
+// instruction, so the 4-per-row grid lands all 4 CALB certificates on row 1.
 export const certificates: Certificate[] = [
   {
     name: "Alvin Chow",
     issuer: "CALB",
     src: "/images/certificates/alvin-chow-calb.jpeg",
+  },
+  {
+    name: "Chan Kong Loong",
+    issuer: "CALB",
+    src: "/images/certificates/chan-kong-loong-calb.jpg",
+  },
+  {
+    name: "David Chang",
+    issuer: "CALB",
+    src: "/images/certificates/david-chang-calb.jpeg",
+  },
+  {
+    name: "Er Chong Haw",
+    issuer: "CALB",
+    src: "/images/certificates/er-chong-haw-calb.jpg",
+  },
+  {
+    name: "David Chang",
+    issuer: "CATL",
+    src: "/images/certificates/david-chang-catl.jpeg",
   },
   {
     name: "Alvin Chow",
@@ -25,33 +47,13 @@ export const certificates: Certificate[] = [
   },
   {
     name: "Chan Kong Loong",
-    issuer: "CALB",
-    src: "/images/certificates/chan-kong-loong-calb.jpg",
-  },
-  {
-    name: "Chan Kong Loong",
     issuer: "Ngee Ann Polytechnic",
     src: "/images/certificates/chan-kong-loong-ngee-ann-poly.jpeg",
   },
   {
     name: "David Chang",
-    issuer: "CALB",
-    src: "/images/certificates/david-chang-calb.jpeg",
-  },
-  {
-    name: "David Chang",
-    issuer: "CATL",
-    src: "/images/certificates/david-chang-catl.jpeg",
-  },
-  {
-    name: "David Chang",
     issuer: "Ngee Ann Polytechnic",
     src: "/images/certificates/david-chang-ngee-ann-poly.jpg",
-  },
-  {
-    name: "Er Chong Haw",
-    issuer: "CALB",
-    src: "/images/certificates/er-chong-haw-calb.jpg",
   },
   {
     name: "Mike Seow",
