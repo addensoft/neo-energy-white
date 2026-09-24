@@ -19,11 +19,7 @@ import { siteConfig } from "@/lib/site-config";
  * their own photo is supplied.
  *
  * Wang Dong is a new entry, inserted between Charles Hoon and David Chang
- * per direct instruction, titled General Manager — the same title David
- * Chang already carried. Left David's as-is rather than guessing a
- * replacement with no instruction on what it should change to; worth the
- * client's eyes since two "General Manager"s back to back is likely not
- * intended.
+ * per direct instruction, titled Founder per direct instruction.
  */
 const TEAM = [
   {
@@ -46,7 +42,7 @@ const TEAM = [
   },
   {
     name: "Wang Dong",
-    title: "General Manager",
+    title: "Founder",
     focus: "Oversees day-to-day operations across the workshop.",
     photo: "/images/team/wang-dong.jpg",
   },
