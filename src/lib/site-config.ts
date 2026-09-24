@@ -94,6 +94,7 @@ export const primaryNav: readonly NavLink[] = [
       { label: "FAQ", href: "/faq" },
     ],
   },
+  { label: "Certificate", href: "/certificate" },
   {
     label: "Services",
     href: "#",
