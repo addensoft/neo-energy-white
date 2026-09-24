@@ -87,11 +87,11 @@ export const primaryNav: readonly NavLink[] = [
     children: [
       { label: "About Us", href: "/about" },
       { label: "Our Gallery", href: "/gallery" },
-      { label: "FAQ", href: "/faq" },
       { label: "Our Mission", href: "/about#mission" },
       { label: "Our Team", href: "/team" },
       { label: "Our Principles", href: "/principles" },
       { label: "News", href: "/news" },
+      { label: "FAQ", href: "/faq" },
     ],
   },
   {
