@@ -12,16 +12,26 @@ import { siteConfig } from "@/lib/site-config";
 
 /**
  * TeamGrid — names, titles, and focus lines, at the client's own direction.
- * Five members now have a real, client-supplied headshot (`photo`, under
- * `public/images/team/`); the remaining two still use the illustrated
- * DiceBear "notionists" placeholder (see `next.config.ts` for the
- * remote-image allowlist entry), keyed to each name as a stable seed, until
- * their own photo is supplied.
+ * Every member now has a real, client-supplied headshot (`photo`, under
+ * `public/images/team/`) — the DiceBear "notionists" illustrated placeholder
+ * (see `next.config.ts` for the remote-image allowlist entry) is no longer
+ * used by anyone currently in `TEAM`, but `avatarUrl` stays as the fallback
+ * for the next member added without a photo yet.
  *
  * Wang Dong is a new entry, inserted between Charles Hoon and David Chang
  * per direct instruction, titled Founder per direct instruction.
+ *
+ * Gou Zi Yang is a new entry, added at the end per direct instruction,
+ * titled Chief Technician.
  */
-const TEAM = [
+type TeamMember = {
+  name: string;
+  title: string;
+  focus: string;
+  photo?: string;
+};
+
+const TEAM: TeamMember[] = [
   {
     name: "Alex Zhang",
     title: "Founder & Managing Director",
@@ -56,15 +66,21 @@ const TEAM = [
     name: "Alvin Chow",
     title: "Manager",
     focus: "The first call for fleet, dealership, and corporate accounts.",
-    photo: undefined,
+    photo: "/images/team/alvin-chow.jpeg",
   },
   {
     name: "Yu Mei Li",
     title: "Admin",
     focus: "Keeps islandwide assessments and servicing on schedule.",
-    photo: undefined,
+    photo: "/images/team/yu-mei-li.jpeg",
   },
-] as const;
+  {
+    name: "Gou Zi Yang",
+    title: "Chief Technician",
+    focus: "Leads the bench on the most technically demanding repairs.",
+    photo: "/images/team/gou-zi-yang.jpeg",
+  },
+];
 
 function avatarUrl(name: string) {
   const seed = encodeURIComponent(name);
